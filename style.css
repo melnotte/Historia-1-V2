@@ -328,6 +328,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
     align-items: center;
     overflow: hidden;
     will-change: transform; /* Optimización para GPU */
+    background-color: #f4f4f4;
 }
 
 /* 2. La imagen */
