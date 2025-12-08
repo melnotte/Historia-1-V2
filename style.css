@@ -1,724 +1,208 @@
-/* --- PALETA DE COLORES GLOBAL (Referencia) ---
-   Fondo: #ffffff (Blanco)
-   Texto Principal: #000000 (Negro)
-   Títulos: #003049 (Azul Oscuro)
-   Acento 1: #c1121f (Rojo Vibrante)
-   Acento 2: #669bbc (Azul Claro)
-   Acento 3: #780000 (Rojo Oscuro)
-*/
-
-/* Extracted styles for Step 1 title (ready to copy)
-   Usage: include this CSS or copy the rules into your project's stylesheet.
-   The selector uses `.step1-title` to avoid colliding with existing markup.
-*/
-
-@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
-
-/* Base title style */
-.step1-title {
-    font-family: 'Special Elite', Georgia, 'Times New Roman', serif;
-    letter-spacing: 0.5px;
-    line-height: 1.3;
-    font-weight: 700;
-    text-align: center;
-    font-size: clamp(1.4rem, 6.5vw, 2.6rem);
-    margin: 0;
-    padding: 12px 14px;
-    color: #ffffff; /* change as needed */
-}
-
-/* small inline segments */
-.step1-title .sline {
-    display: inline;
-    white-space: normal;
-    word-wrap: normal;
-    overflow-wrap: anywhere;
-}
-
-/* Caret blinking during typing animation */
-.step1-title .line.typing::after,
-.step1-title .sline.typing::after {
-    content: '|';
-    display: inline;
-    margin-left: 0.08em;
-    color: currentColor;
-    opacity: 1;
-    animation: blinkCaret 0.7s step-end infinite;
-    pointer-events: none;
-}
-
-@media (min-width: 768px) and (max-width: 1199px) {
-    .step1-title { font-size: 2.6rem; margin-bottom: 25px; }
-}
-
-@media (min-width: 1200px) {
-    .step1-title { font-size: 3rem; margin-bottom: 30px; }
-}
-
-html, body {
-    height: 100%;
-}
-
-*, *::before, *::after {
-    box-sizing: border-box;
-}
-
-body {
+/* --- RESET BÁSICO --- */
+body, html {
     margin: 0;
     padding: 0;
-    font-family: 'Merriweather', serif;
-    color: #003049; /* Por defecto azul para elementos no especificados */
-    background-color: #ffffff;
-    overflow-x: hidden;
-    max-width: 100vw;
-    width: 100%;
-}
-
-h1, h2, h3 {
     font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    margin: 0 0 1rem 0;
-    color: #003049; /* Azul Oscuro se mantiene en títulos */
-}
-
-p {
-    line-height: 1.8;
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    color: #000000;
-    text-align: justify;
-}
-
-
-.intro {
-    position: relative;
+    color: #333;
+    background-color: #f4f4f4;
     width: 100%;
-    padding: 0;
-    margin: 0;
-    text-align: center;
-    min-height: 24vh;
-    height: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /* IMPORTANTE: No usar overflow-x: hidden en body porque rompe sticky */
 }
 
-.intro-content {
-    max-width: 40rem;
-    margin: 0 auto;
-    text-align: center;
-    z-index: 30;
-    color: #ffffff;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-    width: min(90vw, 40rem);
-    max-width: calc(100vw - 2rem);
-    box-sizing: border-box;
-    padding: 0 1rem;
-}
+h1, h2 { font-family: 'Merriweather', serif; }
+p { line-height: 1.6; font-size: 1.1rem; }
 
-.step.is-active .intro-content {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: min(90vw, 40rem);
-    max-width: calc(100vw - 2rem);
-    box-sizing: border-box;
-    padding: 0 1rem;
-    z-index: 120 !important;
-    pointer-events: auto;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-.step.intro .intro-content {
-    position: sticky;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin: 0 auto;
-    width: min(90vw, 40rem);
-    max-width: calc(100vw - 2rem);
-    box-sizing: border-box;
-    padding: 0 1rem;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-.step1-title,
-.intro-content h1 {
-    white-space: normal;
-    word-break: normal;
-    overflow-wrap: anywhere;
-    hyphens: none;
-}
-
-.step.intro {
-    margin: 0 auto 6vh auto;
-    display: block;
-    pointer-events: auto;
-}
-
-.hero-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    -o-object-fit: cover;
-    z-index: 1;
-    pointer-events: none;
-}
-
-/* Fallback background for the video layer in case autoplay is blocked */
-#video-layer {
-    background-color: #000000;
-}
-
-/* Overlay del título dentro del área del video */
-#video-title-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2; /* encima del video */
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 220ms ease-in-out;
-    padding: 0 4vw; /* margen lateral */
-}
-
-#video-title-overlay .step1-title {
-    color: #ffffff;
-    text-shadow: 0 6px 18px rgba(0,0,0,0.65);
-    max-width: min(90vw, 48rem);
-    padding: 0.5rem 0.75rem;
-}
-
-/* Visible sólo cuando Step 1 está activo */
-.step1-visible #video-title-overlay { opacity: 1; }
-
-
-@media (max-aspect-ratio: 3/2) {
-    .hero-video {
-        width: auto;
-        height: 100%;
-        min-width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .intro { padding: 2rem 1rem; }
-    .intro-content h1, .step1-title { font-size: 2rem; }
-}
-
-.caption-sticky {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #780000; /* Rojo Oscuro para el caption */
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-top: 1rem;
-    display: block;
-    border-left: 3px solid #c1121f; /* Rojo Vibrante */
-    padding-left: 10px;
-}
-
-/* --- ESTRUCTURA SCROLLYTELLING --- */
-#scrolly {
-    position: relative;
-    display: block;
-    width: 100%;
-    max-width: 100vw;
-    overflow-x: hidden;
-}
-
-/* El contenedor fijo (Sticky) */
-#sticky-overlay {
+/* --- CAPAS GLOBALES (FONDO) --- */
+#sticky-global {
     position: -webkit-sticky;
     position: sticky;
     top: 0;
+    width: 100%;
     height: 100vh;
-    width: 100%;
-    max-width: 100vw;
-    background-color: transparent;
-    overflow: hidden;
-    z-index: 1;
+    height: 100dvh; /* Mejor soporte móvil */
     margin: 0;
-    left: 0;
-    right: 0;
+    z-index: 0;
+    overflow: hidden;
 }
 
-/* Elementos dentro del Sticky (Capas) */
-.graphic-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-    pointer-events: none;
+.global-layer {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0; transition: opacity 0.8s ease; visibility: hidden;
 }
+.global-layer.is-active { opacity: 1; visibility: visible; }
 
-.graphic-layer.active {
-    opacity: 1;
-    pointer-events: auto;
-}
+.hero-video { width: 100%; height: 100%; object-fit: cover; }
+.video-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); }
+#map { width: 100%; height: 100%; }
 
-/* Mapa */
-#map {
-    width: 100%;
-    height: 100%;
-}
-
-/* Gráfico D3 */
-#chart-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: transparent;
-}
-
-/* Columna de Texto (Steps) */
-#article {
+/* --- CONTENEDOR DE SCROLL --- */
+.scrolly-content {
     position: relative;
-    padding: 0 1rem;
-    max-width: 40rem;
-    margin: 0 auto;
     z-index: 10;
-    pointer-events: none;
+    margin-top: -100vh; 
+    margin-top: -100dvh;
+    padding-bottom: 20vh;
 }
 
-.step[data-step="2"] {
-    text-align: center;
-}
-
-.step[data-step="2"] p,
-.step[data-step="2"] h2,
-.step[data-step="2"] .caption-sticky {
-    max-width: 40rem;
-    margin: 0 auto;
-    text-align: justify;
-}
-
-.step[data-step="2"] > p:first-of-type { margin-bottom: 6vh; }
-.step[data-step="2"] .separator-substep { margin-top: 6vh; }
-
+/* Configuración General de Steps */
 .step {
-    margin: 0 auto 50vh auto;
-    background-color: transparent;
-    padding: 0;
-    border-radius: 0;
+    position: relative;
+    margin: 0 auto;
+    max-width: 40rem; 
+    pointer-events: none; /* Dejar pasar clicks al mapa */
+    overflow: visible; /* Crucial para sticky */
+}
+
+.step-content {
+    background: transparent;
+    padding: 2.5rem;
+    border-radius: 4px;
     box-shadow: none;
     pointer-events: auto;
-    opacity: 1;
-    transition: transform 0.3s, opacity 0.3s;
-    border-left: 5px solid transparent;
+    opacity: 0.2; transition: opacity 0.4s, transform 0.4s;
+    transform: translateY(20px);
 }
+.step.is-active .step-content { opacity: 1; transform: translateY(0); }
 
-.step.is-active {
-    opacity: 1;
-    transform: scale(1.02);
-}
+/* --- ESTILOS ESPECÍFICOS POR STEP --- */
 
-.step:last-child {
-    margin-bottom: 50vh;
-}
-
-/* --- D3 CHART STYLES --- */
-.axis path,
-.axis line {
-    fill: none;
-    stroke: #003049; /* Ejes en Azul Oscuro */
-    shape-rendering: crispEdges;
-}
-
-.axis text {
-    fill: #003049; /* Texto ejes */
-    font-family: 'Inter', sans-serif;
-}
-
-.line {
-    fill: none;
-    stroke: #c1121f; /* Línea en Rojo Vibrante */
-    stroke-width: 3px;
-}
-
-.area {
-    fill: #c1121f; /* Área en Rojo */
-    opacity: 0.1;
-}
-
-.chart-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 1.5rem;
-    font-weight: bold;
-    fill: #003049; /* Título en Azul Oscuro */
-}
-
-/* --- SEPARADOR FULL-SCREEN --- */
-.separator-block {
-    position: relative;
-    width: 100%;
-    max-width: 100vw;
-    left: 0;
+/* STEP 1 */
+.title-step {
     height: 100vh;
-    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+}
+.centered-title {
+    background: transparent; box-shadow: none; color: white; text-align: center;
+}
+.centered-title h1 {
+    font-size: clamp(2rem, 5vw, 4rem);
+    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
-.separator-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+/* STEP 2 */
+.text-step {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+}
+.justified-text p { text-align: justify; }
+
+/* --- STEP 3: STICKY CROSSFADE --- */
+
+.breakout-step {
+    max-width: none; 
+    margin: 0; padding: 0;
+    height: auto;
     display: block;
-    z-index: 1;
 }
 
-.separator-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 3;
+/* 1. La Pista (Track) - Más alta para dar tiempo al efecto */
+.sticky-track {
+    height: 300vh; 
     width: 100%;
-    max-width: 1100px;
-    padding: 1rem 2rem;
-    text-align: center;
-    pointer-events: none;
-}
-
-.separator-lead {
-    color: #ffffff;
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(1.1rem, 3.6vw, 1.6rem);
-    font-weight: 700;
-    margin: 0 0 0.5rem 0;
-    text-shadow: 0 4px 12px rgba(0,0,0,0.6);
-}
-
-/* Ensure caption-sticky stays visible over the image */
-.separator-overlay .caption-sticky {
-    display: inline-block;
-    color: #fff;
-    border-left-color: rgba(255,255,255,0.8);
-    padding-left: 12px;
-    opacity: 0.95;
-}
-
-@media (max-width: 640px) {
-    .separator-overlay { padding: 0.75rem 1rem; }
-    .separator-lead { font-size: 1rem; }
-}
-
-/* --- IMAGEN STICKY Y OVERLAY --- */
-
-.separator-block.stuck {
-    pointer-events: none;
-}
-
-.separator-block.stuck .separator-image {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-    z-index: 10000;
-    pointer-events: none;
-}
-
-.separator-overlay .overlay-box {
-    max-width: 760px;
-    margin: 0 auto;
-    transform: translateX(100%);
-    opacity: 0;
-    transition: transform 600ms cubic-bezier(.2,.9,.2,1), opacity 500ms ease;
-    pointer-events: none;
-}
-
-.separator-overlay .overlay-box.show-from-right {
-    transform: translateX(0%);
-    opacity: 1;
+    position: relative;
     pointer-events: auto;
 }
 
-.separator-overlay .overlay-box {
-    background-color: rgba(0,48,73,0.88);
-    padding: 1.15rem 1.25rem;
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
-}
-
-.separator-overlay .overlay-box .separator-lead,
-.separator-overlay .overlay-box .caption-sticky {
-    color: #fdf0d5;
-}
-
-.separator-overlay .overlay-box .caption-sticky {
-    border-left-color: rgba(253,240,213,0.15);
-    padding-left: 12px;
-    display: inline-block;
-}
-
-@media (max-width: 640px) {
-    .separator-overlay {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: calc(100% - 2rem);
-        max-width: none;
-        padding: 0.5rem;
-        z-index: 30;
-    }
-
-    .separator-overlay .overlay-box {
-        transform: translateY(10%);
-        opacity: 0;
-        transition: transform 420ms ease, opacity 360ms ease;
-    }
-
-    .separator-overlay .overlay-box.show-from-right {
-        transform: translateY(0%);
-        opacity: 1;
-        pointer-events: auto;
-    }
-}
-
-.separator-overlay { pointer-events: none; }
-
-.separator-block.stuck .separator-overlay {
-    position: fixed;
-    top: 50%;
-    right: 6%;
-    left: auto;
-    transform: translateY(-50%);
-    width: min(42%, 760px);
-    z-index: 10010;
-    display: block;
-    pointer-events: none;
-}
-
-@media (max-width: 1024px) {
-    .separator-block.stuck .separator-overlay { right: 4%; width: 46%; }
-}
-
-.separator-block.stuck .separator-overlay .overlay-box.show-from-right { pointer-events: auto; z-index:10011; }
-
-.separator-substep.stuck { pointer-events: none; }
-
-.separator-substep.stuck .separator-image,
-.separator-substep.stuck .separator-track .separator-image {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-    z-index: 10000;
-    pointer-events: none;
-}
-
-.separator-substep.stuck .separator-overlay,
-.separator-substep.stuck .separator-track .separator-overlay {
-    position: fixed;
-    top: 50%;
-    right: 6%;
-    left: auto;
-    transform: translateY(-50%);
-    width: min(42%, 760px);
-    z-index: 10010;
-    display: block;
-    pointer-events: none;
-}
-
-.separator-substep.stuck .separator-overlay .overlay-box.show-from-right,
-.separator-substep.stuck .separator-track .separator-overlay .overlay-box.show-from-right {
-    pointer-events: auto;
-    z-index: 10011;
-}
-
-.separator-substep {
-    position: relative;
-    width: 100vw;
-    max-width: 100vw;
-    left: 50%;
-    margin-left: -50vw;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding: 0;
-    overflow: visible;
-}
-
-.separator-track {
-    position: relative;
-    width: 100%;
-    left: 0;
-    height: 130vh;
-    overflow: visible;
-}
-
-.separator-substep .separator-track {
-    position: relative;
-    left: 0;
-    width: 100%;
-}
-
-.separator-track .separator-sticky {
+/* 2. El Elemento Pegajoso */
+.sticky-item {
     position: -webkit-sticky;
     position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
     height: 100vh;
-    width: 100vw;
-    max-width: 100vw;
-    max-height: 100vh;
-    display: block;
+    height: 100dvh;
+    width: 100%;
     overflow: hidden;
-    z-index: 10;
-    will-change: position;
+    z-index: 50; 
+    display: flex; flex-direction: column; 
+    align-items: center; justify-content: center;
+    background: #000;
 }
 
-.separator-track .track-spacer {
-    height: calc(130vh - 100vh);
-    width: 100%;
+/* Imágenes Base */
+.full-image {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-size: cover; background-position: center;
+    transition: opacity 1s ease-in-out; /* Ambos animan suavemente */
+    will-change: opacity; /* Optimización de renderizado para GPU */
 }
 
-.step[data-step="2"] { margin-bottom: 6vh; padding-top: 6vh; padding-bottom: 6vh; }
-.step[data-step="2"] > h2:first-of-type,
-.step[data-step="2"] > *:first-child { margin-top: 0; }
-.step[data-step="2"] > p:first-of-type { margin-top: 0; margin-bottom: 0; }
-.step[data-step="2"] .separator-substep { margin-top: 20vh !important; }
-.step[data-step="1"] { margin-bottom: 2vh; }
-
-@media (max-width: 640px) {
-    .step { margin: 0 auto 18vh auto; }
-    .step[data-step="2"] { margin-bottom: 16vh; }
-    .separator-track { height: 120vh; }
-    .separator-track .track-spacer { height: calc(120vh - 100vh); }
-}
-
-.separator-track .separator-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    max-width: 100vw;
-    max-height: 100vh;
-    object-fit: cover;
-    display: block;
+/* Imagen 1 (Selva) - Estado Inicial */
+.img-primary {
     z-index: 1;
+    opacity: 0.7; /* Visible por defecto */
 }
 
-.separator-track .separator-overlay {
-    position: absolute;
-    top: 50%;
-    right: 6%;
-    left: auto;
-    transform: translateY(-50%) translateX(0%);
-    width: min(46%, 760px);
-    z-index: 10005;
-    pointer-events: none;
+/* Imagen 2 (Planos) - Estado Inicial */
+.img-secondary {
+    z-index: 2;
+    opacity: 0; /* Invisible por defecto */
 }
 
-.separator-track .separator-overlay .overlay-box {
-    background-color: rgba(0,48,73,0.92);
-    padding: 1.15rem 1.25rem;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-    color: #fdf0d5;
-    max-width: 760px;
-    opacity: 0;
-    will-change: transform, opacity;
+/* --- ESTADOS DE ACTIVACIÓN (CONTROLADO POR EL PADRE) --- */
+
+/* Cuando el padre tiene la clase 'show-overlay': */
+.sticky-item.show-overlay .img-primary {
+    opacity: 0; /* La imagen 1 se apaga */
 }
 
-.separator-track .separator-overlay .separator-lead { color: #fdf0d5; }
-.separator-track .separator-overlay .caption-sticky { color: #fdf0d5; border-left-color: rgba(253,240,213,0.12); }
-
-@media (max-width: 900px) {
-    .separator-track .separator-overlay { right: 4%; width: calc(86%); }
-    .separator-track .separator-overlay .overlay-box { padding: 0.9rem; }
+.sticky-item.show-overlay .img-secondary {
+    opacity: 0.7; /* La imagen 2 se enciende */
 }
 
-@media (max-width: 640px) {
-    .separator-track { height: 220vh; }
-    .separator-track .track-spacer { height: calc(220vh - 100vh); }
-    .separator-track .separator-overlay { right: 2%; width: calc(92%); left: 4%; }
-    .separator-track .separator-overlay .overlay-box { transform: translateX(0%); opacity: 1; max-width: none; }
+/* Texto Overlay */
+.sticky-overlay-text {
+    position: relative; z-index: 10;
+    text-align: center; color: white;
+    max-width: 800px; padding: 0 2rem;
 }
 
-/* Título del step 1 encima del video */
-.step[data-step="1"] .step1-title,
-.step[data-step="1"] .intro-content .step1-title {
+.lead-text {
+    font-family: 'Merriweather', serif;
+    font-size: 2rem; font-weight: 300;
+    margin-bottom: 2rem;
+}
+
+.sticky-caption {
+    display: inline-block;
+    font-size: 1rem; font-style: italic; opacity: 0.9;
+    border-top: 1px solid rgba(255,255,255,0.5);
+    padding-top: 1rem;
+}
+
+.spacer { height: 50vh; }
+
+/* --- STEP 5: DOCUMENTO --- */
+
+.doc-container {
     position: relative;
-    z-index: 9999;
-}
-
-/* Mantener el título del step 1 fijo y centrado sobre el video
-   y mostrarlo sólo cuando la capa de video está activa. */
-.step[data-step="1"] .intro-content .step1-title { display: none; }
-.step[data-step="1"] .intro-content {
-    visibility: hidden;
-    height: 0;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
-/* Visible sólo si el Step 1 está activo y el video está activo */
-
-.step[data-step="1"].is-active .intro-content .step1-title {
-    position: relative;
-}
-
-@media (max-width: 640px) {
-    #video-title-overlay { align-items: center; justify-content: center; }
-    .step[data-step="1"].is-active .intro-content .step1-title {
-        font-size: clamp(1.2rem, 6.5vw, 2rem);
-        padding: 0 0.5rem;
-    }
-}
-
-.step.intro.is-active {
-    height: auto;
-    max-height: none;
-    overflow: visible;
-    margin-bottom: 0;
-    position: relative;
-}
-
-.step.intro.is-active .intro-content {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: min(90vw, 40rem);
-    max-width: calc(100vw - 2rem);
-    max-height: 80vh;
-    overflow-y: auto;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    background-color: #f4f4f4; /* Fondo neutro para el documento */
+    overflow: hidden; /* IMPORTANTE: Para que el zoom no desborde la pantalla */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 1rem;
-    box-sizing: border-box;
-    z-index: 120 !important;
-    pointer-events: auto;
 }
 
+.doc-image {
+    height: 300vh; 
+    width: auto;
+    object-fit: contain;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    /* El navegador usará el centro por defecto, que es lo que queremos para empezar */
+    will-change: transform;
+}
+
+.doc-caption {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.9);
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.5s;
+    font-family: 'Merriweather', serif;
+}

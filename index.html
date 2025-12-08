@@ -3,176 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cancún antes de Cancún</title>
+    <title>Cancún: Origen y Destino</title>
     
-    <!-- Fuentes Externas -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
-    
-    <!-- Librería de Mapbox CSS -->
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+    <!-- Mapbox CSS -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
-
-    <!-- Hoja de Estilos -->
+    <!-- Nuestros Estilos -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <main id="scrolly">
         
-        <!-- EL LIENZO FIJO (STICKY) -->
-        <figure id="sticky-overlay">
+        <!-- === LIENZO DE FONDO GLOBAL === -->
+        <!-- Elementos que persisten detrás de los pasos normales (Video, Mapa) -->
+        <figure id="sticky-global">
             
-            <!-- Capa 0: Video Portada -->
-            <div id="video-layer" class="graphic-layer">
-                <video id="hero-video" class="hero-video" src="assets/1.mp4" autoplay muted loop playsinline></video>
-                <!-- Overlay del título para Step 1, siempre encima del video -->
-                <div id="video-title-overlay">
-                    <h1 id="video-title" class="step1-title">Cancún antes de Cancún: un territorio en los mapas</h1>
-                </div>
+            <!-- Capa Video (Para Step 1) -->
+            <div id="video-layer" class="global-layer">
+                <video id="hero-video" class="hero-video" src="assets/1.mp4" muted loop playsinline></video>
+                <div class="video-overlay"></div>
             </div>
 
-            <!-- Capa 1: Mapa Interactivo -->
-            <div id="map" class="graphic-layer"></div>
-            
-            <!-- Capa 2: Gráfico de Población (D3) -->
-            <div id="chart-container" class="graphic-layer"></div>
+            <!-- Capa Mapa (Para Steps 2, 4 en adelante) -->
+            <div id="map-layer" class="global-layer">
+                <div id="map"></div>
+            </div>
+
         </figure>
 
-        <!-- LOS PASOS NARRATIVOS -->
-        <article id="article">
-
-            <!-- Step 1: Portada (activa el video) -->
-            <div class="step intro" data-step="1">
-                <div class="intro-content">
-                    <h1 class="step1-title">Cancún antes de Cancún: un territorio en los mapas</h1>
+        <!-- === NARRATIVA (SCROLL) === -->
+        <article class="scrolly-content">
+            
+            <!-- STEP 1: Título Centrado -->
+            <div class="step title-step" data-step="1">
+                <div class="step-content centered-title">
+                    <h1>Cancún antes de Cancún:<br>un territorio en los mapas</h1>
                 </div>
             </div>
 
-            <!-- Step 2: Cancún antes de Cancún: un territorio en los mapas -->
-            <div class="step" data-step="2">
-                <p>Durante siglos, el lugar que hoy conocemos como Cancún aparece de forma cambiante en mapas antiguos: a veces impreciso, a veces apenas sugerido. Esa memoria cartográfica ayuda a recordar algo esencial: antes de cualquier calle o edificio, existía un territorio complejo —selva, humedales, costa— con dinámicas propias. Comprender ese “antes” es clave para valorar lo que implica urbanizar y para reconocer que el entorno siempre ha sido parte del destino de la ciudad.</p>
+            <!-- STEP 2: Texto Justificado -->
+            <div class="step text-step" data-step="2">
+                <div class="step-content justified-text">
+                    <p>Durante siglos, el lugar que hoy conocemos como Cancún aparece de forma cambiante en mapas antiguos: a veces impreciso, a veces apenas sugerido. Esa memoria cartográfica ayuda a recordar algo esencial: antes de cualquier calle o edificio, existía un territorio complejo —selva, humedales, costa— con dinámicas propias. Comprender ese “antes” es clave para valorar lo que implica urbanizar y para reconocer que el entorno siempre ha sido parte del destino de la ciudad.</p>
+                </div>
+            </div>
 
-                <!-- Substep: se coloca dentro del Step 2 para que el padre tenga suficiente altura
-                     y la imagen sticky funcione correctamente -->
-                <div class="substep separator-substep">
-                    <section class="separator-track">
-                        <div class="separator-sticky">
-                            <img src="assets/1.png" alt="Separador" class="separator-image">
-                            <div class="separator-overlay">
-                                <div class="overlay-box">
-                                    <p class="separator-lead">El siguiente giro llega cuando ese territorio se mira como oportunidad estratégica.</p>
-                                    <span class="caption-sticky">“Antes de ser ciudad, Cancún fue territorio: la base ambiental que hoy buscamos cuidar.”</span>
-                                </div>
-                            </div>
+            <!-- STEP 3: STICKY CON CAMBIO DE IMAGEN -->
+            <!-- Ocupa todo el ancho. Al bajar, cambia de imagen 1 a imagen 2 -->
+            <div class="step breakout-step" data-step="3">
+                <div class="sticky-track">
+                    <div class="sticky-item">
+                        
+                        <!-- IMAGEN 1 (Base: Selva/Territorio) -->
+                        <div class="full-image img-primary" 
+                             style="background-image: url('assets/1.png');">
                         </div>
-                        <div class="track-spacer" aria-hidden="true"></div>
-                    </section>
+
+                        <!-- IMAGEN 2 (Overlay: Planos/Trazo) -->
+                        <div class="full-image img-secondary" 
+                             style="background-image: url('assets/2.png');">
+                        </div>
+
+                        <!-- TEXTO SUPERPUESTO -->
+                        <div class="sticky-overlay-text">
+                            <p class="lead-text">El siguiente giro llega cuando ese territorio se mira como oportunidad estratégica.</p>
+                            <span class="sticky-caption">“Antes de ser ciudad, Cancún fue territorio: la base ambiental que hoy buscamos cuidar.”</span>
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
-            <!-- Step 3: 1950–60: explorar para planear -->
-            <div class="step" data-step="3">
-                <h2>1950–60: explorar para planear</h2>
-                <p>A mediados del siglo XX se impulsa en México una visión: crear destinos turísticos integralmente planeados como palanca de desarrollo. Se exploran costas, se comparan condiciones, se piensan infraestructuras y se proyectan escenarios económicos. Cancún entra en esa lógica como un sitio con potencial excepcional. En esta etapa se instala la idea de diseñar la ciudad “desde cero”, con una estructura capaz de sostener un destino internacional y, al mismo tiempo, una vida urbana completa.</p>
-                <p class="bridge">Puente: Esa visión se vuelve concreta cuando se escribe el plan y se formaliza el proyecto.</p>
-                <span class="caption-sticky">“La planeación turística integral coloca a Cancún en el mapa de decisiones nacionales.”</span>
+            <!-- STEP 4: 1950-60 -->
+            <div class="step text-step" data-step="4">
+                <div class="step-content">
+                    <h2>1950–60: explorar para planear</h2>
+                    <p>A mediados del siglo XX se impulsa en México una visión: crear destinos turísticos integralmente planeados como palanca de desarrollo. Se exploran costas, se comparan condiciones, se piensan infraestructuras y se proyectan escenarios económicos.</p>
+                    <p>Cancún entra en esa lógica como un sitio con potencial excepcional. En esta etapa se instala la idea de diseñar la ciudad “desde cero”, con una estructura capaz de sostener un destino internacional y, al mismo tiempo, una vida urbana completa.</p>
+                </div>
             </div>
 
-            <!-- Step 4: 1968–1971: del Plan Maestro a la decisión pública -->
-            <div class="step" data-step="4">
-                <h2>1968–1971: del Plan Maestro a la decisión pública</h2>
-                <p>En 1968 se presenta el Plan Maestro: Cancún se dibuja antes de existir. Y en 1971 el proyecto se formaliza mediante un decreto: pasa de idea técnica a decisión pública. Este momento define el punto de partida institucional y fija una estructura territorial que marcará décadas: la articulación entre zona turística y ciudad de soporte. No como oposición, sino como un sistema que debía funcionar en conjunto. Con el tiempo, esa estructura requerirá ajustes para garantizar equilibrio urbano, conectividad y acceso a oportunidades.</p>
-                <p class="bridge">Puente: Pero el plan no camina solo: la ciudad aparece cuando llega la gente y empieza la obra.</p>
-                <span class="caption-sticky">“Plan y decreto: Cancún nace como proyecto formal, con visión y reglas de origen.”</span>
-            </div>
+            <!-- STEP 5 -->
+            <div class="step breakout-step" data-step="5">
+                <div class="sticky-track">
+                    <div class="sticky-item">
+            
+                        <div class="doc-container">
+                            <img src="assets/diario.png" alt="Diario Oficial" class="doc-image">
+                        </div>
 
-            <!-- Step 5: 1970: la primera línea sobre la arena -->
-            <div class="step" data-step="5">
-                <h2>1970: la primera línea sobre la arena</h2>
-                <p>Cuando llegan los primeros ingenieros, Cancún aún no es ciudad: hay arena, selva y campamentos. La primera avenida comienza como una línea marcada en el suelo, un gesto simple que inaugura la urbanización. Ese inicio tiene dos lecturas: muestra la fuerza del proyecto, pero también la fragilidad de construir desde cero en un entorno exigente. Aquí nace la ciudad cotidiana: la del trabajo, la colaboración y la llegada de población que empieza a darle identidad al lugar.</p>
-                <p class="bridge">Puente: En paralelo, se instala una propuesta urbana clave: la supermanzana.</p>
-                <span class="caption-sticky">“El comienzo es físico: una línea sobre la arena que se convierte en ciudad.”</span>
+                        <div class="doc-caption">
+                            <p>La publicación oficial que formaliza el destino.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+            
 
-            <!-- Step 6: 1970–1973: la promesa de la ciudad cercana (supermanzanas) -->
-            <div class="step" data-step="6">
-                <h2>1970–1973: la promesa de la ciudad cercana (supermanzanas)</h2>
-                <p>La supermanzana se plantea como una arquitectura de proximidad: vida cotidiana dentro —equipamientos, espacios compartidos, recorridos caminables— y el automóvil como borde, no como centro. Entre 1970 y 1973 se levantan las primeras. Esta idea es importante porque contiene una ambición urbana muy actual: reducir distancias, hacer barrios funcionales y fortalecer la comunidad. Esa promesa sigue siendo una referencia valiosa para pensar cómo mejorar la ciudad existente y cómo guiar el crecimiento futuro.</p>
-                <p class="bridge">Puente: La escala del proyecto cambia cuando Cancún se conecta al mundo.</p>
-                <span class="caption-sticky">“Supermanzanas: proximidad y vida barrial como parte del diseño original.”</span>
-            </div>
-
-            <!-- Step 7: 1972: el destino turístico se materializa -->
-            <div class="step" data-step="7">
-                <h2>1972: el destino turístico se materializa</h2>
-                <p>En 1972 se coloca la primera piedra del hotel Bojórquez. Más que un hito simbólico, es la transición hacia una economía turística en plena operación. Cada inversión trae consigo empleo, cadenas de suministro y nueva población. La ciudad empieza a crecer por atracción: personas que llegan para construir, trabajar y establecerse. Desde aquí se vuelve central una tarea de planeación permanente: asegurar que el crecimiento turístico también se traduzca en ciudad habitable para quienes la sostienen día a día.</p>
-                <p class="bridge">Puente: Y en 1973 llega el gran multiplicador: el aeropuerto internacional.</p>
-                <span class="caption-sticky">“La industria turística activa flujos económicos y migratorios que transforman la ciudad.”</span>
-            </div>
-
-            <!-- Step 8: 1973: el aeropuerto y el salto de escala -->
-            <div class="step" data-step="8">
-                <h2>1973: el aeropuerto y el salto de escala</h2>
-                <p>Con la inauguración del aeropuerto internacional en 1973, Cancún se conecta y acelera. La conectividad abre una etapa de expansión sostenida: más visitantes, más empleo, más demanda de vivienda y servicios. Décadas después, la magnitud puede ilustrarse con cifras muy altas —decenas de miles de cuartos hoteleros, infraestructura para congresos y un aeropuerto que en años recientes supera decenas de millones de pasajeros—, señales de una ciudad posicionada globalmente. El desafío es que esa escala sea compatible con una vida urbana cercana y equitativa.</p>
-                <p class="bridge">Puente: El crecimiento demográfico confirma el cambio: Cancún deja de crecer “paso a paso”.</p>
-                <span class="caption-sticky">“La conectividad convierte a Cancún en un imán: crecimiento sostenido y reto urbano.”</span>
-            </div>
-
-            <!-- Step 9: 1970–1980–2020: crecimiento fuera de escala -->
-            <div class="step" data-step="9">
-                <h2>1970–1980–2020: crecimiento fuera de escala</h2>
-                <p>El salto de los años setenta es contundente: la población pasa de 6,867 (1970) a 37,190 (1980), un incremento de 441.6%. Esa velocidad no es solo un dato estadístico: es una presión sobre suelo, vivienda, agua, drenaje, equipamientos y movilidad. En este punto se forma la cadena que explica lo que sigue: crece la población → crecen las necesidades → crece la ciudad en el territorio. Con el tiempo, el gran desafío será sostener la calidad urbana sin depender de distancias cada vez mayores.</p>
-                <p class="bridge">Puente: La pregunta se vuelve inevitable: ¿cómo se absorbió ese crecimiento en el espacio?</p>
-                <span class="caption-sticky">“1970→1980: +441.6%. El crecimiento demográfico se convierte en fuerza urbana.”</span>
-            </div>
-
-            <!-- Step 10: 1980–2000: expansión y fragmentación -->
-            <div class="step" data-step="10">
-                <h2>1980–2000: expansión y fragmentación</h2>
-                <p>Para absorber el crecimiento, la urbanización se extiende. En este tramo se consolida una ciudad con piezas diferenciadas: la franja turística, desarrollos residenciales con dinámicas propias y áreas periféricas que crecen para alojar población trabajadora. El resultado espacial es claro: distancias mayores, costos crecientes de infraestructura y desafíos para el transporte y el acceso a oportunidades. Al mismo tiempo, Cancún construye vida urbana e identidad: espacios de encuentro, comercio, barrio. Hoy, esa energía urbana es un activo para regenerar centralidades y mejorar la conectividad.</p>
-                <p class="bridge">Puente: Y cuando una ciudad se extiende, también se vuelve más sensible a riesgos.</p>
-                <span class="caption-sticky">“La expansión resuelve demanda, pero introduce distancias y retos de integración.”</span>
-            </div>
-
-            <!-- Step 11: 1988–2005–hoy: vulnerabilidad, resiliencia y límites ambientales -->
-            <div class="step" data-step="11">
-                <h2>1988–2005–hoy: vulnerabilidad, resiliencia y límites ambientales</h2>
-                <p>Los huracanes Gilberto (1988) y Wilma (2005) son hitos que muestran vulnerabilidades y también capacidad de recuperación. La reconstrucción y la adaptación se vuelven parte de la historia urbana. En paralelo, crece la presión sobre selvas, manglares y playas. En años recientes, el sargazo aparece como crisis ambiental persistente asociada a dinámicas climáticas y oceánicas. Este tramo invita a una lectura práctica: el futuro de Cancún depende de cómo integra resiliencia, protección ambiental e infraestructura urbana con visión metropolitana.</p>
-                <p class="bridge">Puente: Ese límite se vuelve aún más visible cuando miramos el territorio desde arriba.</p>
-                <span class="caption-sticky">“Riesgo y ambiente: factores que exigen planeación preventiva y adaptación.”</span>
-            </div>
-
-            <!-- Step 12: 2000–2010–2020: la huella en el verde -->
-            <div class="step" data-step="12">
-                <h2>2000–2010–2020: la huella en el verde</h2>
-                <p>La secuencia 2000 → 2010 → 2020 permite observar la pérdida de cobertura forestal como un proceso acumulativo. No se trata solo de “menos verde”: implica fragmentación ecológica, presión sobre servicios ambientales, impactos en temperatura, agua y resiliencia. Leída junto a la expansión urbana, la lección es clara: la forma de crecer importa tanto como el crecimiento mismo. Esta evidencia abre una oportunidad: orientar la ciudad hacia la consolidación, la eficiencia territorial y una infraestructura verde más estratégica.</p>
-                <p class="bridge">Puente: Mientras el territorio cambia, ocurre otro giro urbano: el centro empieza a perder fuerza.</p>
-                <span class="caption-sticky">“La evidencia 2000–2020 ayuda a planear crecimiento con protección ambiental.”</span>
-            </div>
-
-            <!-- Step 13: 2010–2020 y 2025: el giro reciente y el futuro inmediato -->
-            <div class="step" data-step="13">
-                <h2>2010–2020 y 2025: el giro reciente y el futuro inmediato</h2>
-                <p>Entre 2010 y 2020, las áreas centrales del municipio registran caídas acumuladas superiores al <strong>10%</strong>, mientras zonas periféricas crecen en rangos promedio de <strong>20–30%</strong> aunque hay zonas que crecen hasta un xx%. Este patrón sugiere una ciudad que se dispersa: más superficie urbanizada para sostener menos vida cerca del centro. La proyección refuerza la dimensión del reto: una huella urbana 2025 de aproximadamente <strong>18,702 ha</strong> y un crecimiento acumulado de aproximadamente <strong>280%</strong> desde 1980. La buena noticia es que esta lectura permite actuar: revitalizar centralidades, mejorar movilidad y servicios, y contener expansión con una ciudad más compacta, conectada y verde.</p>
-                <p class="bridge">Puente / cierre: La pregunta es de planeación: ¿cómo recuperamos cercanía y oportunidades sin seguir extendiendo la huella?</p>
-                <span class="caption-sticky">“Dispersión y huella proyectada: evidencia para orientar una ciudad más cercana y resiliente.”</span>
-            </div>
+            <div class="step spacer"></div>
 
         </article>
     </main>
 
-    <footer class="outro">
-        <p>IMPLAN Cancún | Instituto de Planeación del Desarrollo Urbano</p>
-        <p>&copy; 2025 — Todos los derechos reservados</p>
-    </footer>
-
-    <!-- Scripts de Librerías -->
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Scripts -->
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
     <script src="https://unpkg.com/scrollama"></script>
-    <!-- GSAP + ScrollTrigger para animaciones controladas por scroll -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/ScrollTrigger.min.js"></script>
-    
-    <!-- Script Principal -->
     <script src="main.js"></script>
 </body>
 </html>
