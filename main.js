@@ -80,11 +80,31 @@ function handleStepEnter(response) {
             map.flyTo({ center: [-86.82, 21.14], zoom: 11, pitch: 0, speed: 0.5 });
             break;
         case '9':
-            // Step 9: VIDEO + TARJETA
+            // Step 9: VIDEO STICKY + TARJETA
             switchGlobalLayer('video2');
             const sandVid = document.getElementById('sand-video');
             if(sandVid) sandVid.play().catch(()=>{});
             break;
+        case '10':
+            // Step 10: TEXTO 1970-1973
+            switchGlobalLayer('map');
+            map.flyTo({ center: [-86.85, 21.16], zoom: 10, pitch: 0, speed: 0.5 });
+            break;
+        case '11':
+            // Step 11: IMAGEN SUPERMANZANAS
+            switchGlobalLayer('none');
+
+            // Forzamos el reset cada vez que se entra al paso
+            const wrapper = element.querySelector('.zoom-wrapper');
+            const box = element.querySelector('.sm-highlight-box');
+            const caption = element.querySelector('.sm-caption-box');
+
+            if (wrapper) wrapper.style.transform = 'scale(1) translate3d(0,0,0)'; // Reset Zoom
+            if (box) box.classList.remove('is-visible'); // Ocultar caja
+            if (caption) caption.classList.remove('is-visible'); // Ocultar texto
+            break;
+        default:
+            switchGlobalLayer('none');
     }
 }
 
@@ -220,6 +240,68 @@ function handleStepProgress(response)
 
             card.style.opacity = opacity;
             card.style.transform = `translateY(${moveY}px)`;
+        }
+    }
+
+    // LÓGICA STEP 11: Pausa -> Zoom -> Recuadro
+    if (step === '11') {
+        const wrapper = element.querySelector('.zoom-wrapper');
+        const box = element.querySelector('.sm-highlight-box');
+
+        // 1. Capturamos el nuevo elemento
+        const caption = element.querySelector('.sm-caption-box');
+
+        if (wrapper && box) {
+            
+            const maxScale = 2; 
+            const panX = -320; 
+            const panY = 100; 
+
+            let scale = 1;
+            let currentPanX = 0;
+            let currentPanY = 0;
+
+            // FASE 0: VER LA IMAGEN (0% a 25%)
+            // Aquí no pasa nada, solo ves el plano completo.
+            if (progress < 0.25) {
+                scale = 1;
+                currentPanX = 0;
+                currentPanY = 0;
+                showOverlays = false;
+            }
+
+            // FASE 1: HACIENDO ZOOM (25% a 60%)
+            // Calculamos la transición
+            else if (progress >= 0.25 && progress < 0.6) {
+                // Normalizamos de 0 a 1 dentro de este tramo
+                const phaseProgress = (progress - 0.25) / 0.35; 
+                
+                scale = 1 + (phaseProgress * (maxScale - 1));
+                currentPanX = phaseProgress * panX;
+                currentPanY = phaseProgress * panY;
+                showOverlays = false; // Aún no mostramos texto
+            }
+            
+            // FASE 2: LECTURA / HOLD (60% en adelante)
+            // Ya llegamos al zoom máximo, mostramos el texto.
+            else {
+                scale = maxScale;
+                currentPanX = panX;
+                currentPanY = panY;
+                showOverlays = true; // Aparece texto y cuadro
+            }
+
+            // APLICAMOS LOS CAMBIOS
+            wrapper.style.transform = `translate3d(${currentPanX}px, ${currentPanY}px, 0) scale(${scale})`;
+            
+            // GESTIÓN DE CLASES (TEXTO Y CUADRO)
+            if (showOverlays) {
+                box.classList.add('is-visible');
+                if (caption) caption.classList.add('is-visible');
+            } else {
+                box.classList.remove('is-visible');
+                if (caption) caption.classList.remove('is-visible');
+            }
         }
     }
 }
