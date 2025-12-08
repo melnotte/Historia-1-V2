@@ -13,7 +13,8 @@ const map = new mapboxgl.Map({
 // 2. Control de Capas Globales
 const layers = {
     video: document.getElementById('video-layer'),
-    map: document.getElementById('map-layer')
+    map: document.getElementById('map-layer'),
+    video2: document.getElementById('video-layer-2')
 };
 
 function switchGlobalLayer(name) {
@@ -72,6 +73,17 @@ function handleStepEnter(response) {
             // Step 7: PLAN MAESTRO (Sticky)
             // Ocultamos mapa/video para ver la imagen del plan
             switchGlobalLayer('none');
+            break;
+        case '8':
+            // Step 8: TEXTO 1970
+            switchGlobalLayer('map');
+            map.flyTo({ center: [-86.82, 21.14], zoom: 11, pitch: 0, speed: 0.5 });
+            break;
+        case '9':
+            // Step 9: VIDEO + TARJETA
+            switchGlobalLayer('video2');
+            const sandVid = document.getElementById('sand-video');
+            if(sandVid) sandVid.play().catch(()=>{});
             break;
     }
 }
@@ -172,6 +184,40 @@ function handleStepProgress(response)
             }
 
             // APLICAMOS LOS CAMBIOS
+            card.style.opacity = opacity;
+            card.style.transform = `translateY(${moveY}px)`;
+        }
+    }
+
+    // LÓGICA STEP 9: Tarjeta Arena
+    if (step === '9') {
+        const card = element.querySelector('.sand-card');
+        
+        if (card) {
+            let opacity = 0;
+            let moveY = 0;
+
+            // FASE 1: ENTRADA (0.1 a 0.3)
+            if (progress < 0.3) {
+                let enterProgress = (progress - 0.1) / 0.2;
+                if (enterProgress < 0) enterProgress = 0;
+                if (enterProgress > 1) enterProgress = 1;
+
+                opacity = enterProgress; 
+                moveY = 50 - (enterProgress * 50); 
+            }
+            // FASE 2: LECTURA (0.3 a 0.6 - un poco más largo)
+            else if (progress >= 0.3 && progress < 0.6) {
+                opacity = 1;
+                moveY = 0;
+            }
+            // FASE 3: SALIDA (0.6 a 1.0)
+            else {
+                let exitProgress = (progress - 0.6) / 0.4;
+                opacity = 1 - (exitProgress * 0.5); 
+                moveY = -600 * exitProgress; 
+            }
+
             card.style.opacity = opacity;
             card.style.transform = `translateY(${moveY}px)`;
         }

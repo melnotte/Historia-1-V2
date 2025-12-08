@@ -261,3 +261,57 @@ p { line-height: 1.6; font-size: 1.1rem; }
     border: none;
     padding: 0;
 }
+
+/* --- STEP 9: TARJETA COLOR ARENA --- */
+.sticky-item.transparent-bg {
+    background: transparent !important;
+}
+
+.sand-card {
+    position: absolute;
+    bottom: 5%;
+    
+    left: auto; 
+    right: 5%;
+    
+    width: 90%;
+    max-width: 450px;
+    
+    background-color: #FDF0D5; 
+    color: #333333; 
+    
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    
+    /* Estado Inicial */
+    opacity: 0;
+    transform: translateY(50px);
+    will-change: opacity, transform;
+}
+
+.sand-card .lead-text {
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    font-family: 'Merriweather', serif;
+    color: #2c3e50;
+}
+
+.card-divider.dark-divider {
+    background: rgba(0,0,0,0.2);
+    height: 1px;
+    width: 50px;
+    margin: 1rem 0;
+}
+
+.sand-card .sticky-caption {
+    display: block;
+    font-size: 0.95rem;
+    font-style: italic;
+    opacity: 0.8;
+    border: none;
+    padding: 0;
+    color: #444;
+}
