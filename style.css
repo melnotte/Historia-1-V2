@@ -83,6 +83,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
 .text-step {
     min-height: 100vh;
     display: flex; align-items: center; justify-content: center;
+    text-align: justify;
 }
 .justified-text p { text-align: justify; }
 
@@ -205,4 +206,58 @@ p { line-height: 1.6; font-size: 1.1rem; }
     opacity: 0;
     transition: opacity 0.5s;
     font-family: 'Merriweather', serif;
+}
+
+/* STEP 7 */
+.img-contain {
+    background-size: contain !important; /* Prioridad sobre cover */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #f4f4f4;
+}
+
+.blue-card {
+    position: absolute;
+    bottom: 5%; /* Margen del fondo */
+    left: 5%;   /* Margen de la izquierda */
+    width: 90%;
+    max-width: 450px; /* Ancho máximo para que no se vea enorme en desktop */
+    
+    background-color: rgba(0, 48, 73, 0.9); /* #003049 al 90% opacidad */
+    color: #ffffff;
+    
+    padding: 2rem;
+    border-radius: 8px; /* Bordes suaves */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* Sombra para profundidad */
+    
+    /* ESTADO INICIAL (Invisible y desplazado hacia abajo) */
+    opacity: 0;
+    transform: translateY(50px);
+    
+    /* IMPORTANTE: will-change para rendimiento */
+    will-change: opacity, transform;
+}
+
+.blue-card .lead-text {
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    font-family: 'Merriweather', serif;
+}
+
+.card-divider {
+    height: 1px;
+    width: 50px;
+    background: rgba(255,255,255,0.4);
+    margin: 1rem 0;
+}
+
+.blue-card .sticky-caption {
+    display: block;
+    font-size: 0.95rem;
+    font-style: italic;
+    opacity: 0.8;
+    border: none;
+    padding: 0;
 }

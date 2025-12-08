@@ -47,14 +47,31 @@ function handleStepEnter(response) {
             break;
 
         case '3':
-            // Step 3: STICKY
-            // Ocultamos las capas globales. El CSS del Step 3 toma el control.
+            // Step 3: STICKY IMÁGENES
             switchGlobalLayer('none'); 
             break;
 
         case '4':
             switchGlobalLayer('map');
             map.flyTo({ center: [-86.78, 21.13], zoom: 11.5, pitch: 0, speed: 0.8 });
+            break;
+
+        case '5':
+            // Step 5: DIARIO OFICIAL
+            switchGlobalLayer('none');
+            break;
+
+        case '6':
+            // Step 6: TEXTO 1968-1971 (Volvemos a ver el mapa de fondo)
+            switchGlobalLayer('map');
+            // Opcional: Un pequeño ajuste de cámara para dar dinamismo
+            map.flyTo({ center: [-86.80, 21.15], zoom: 11, pitch: 0, speed: 0.5 });
+            break;
+
+        case '7':
+            // Step 7: PLAN MAESTRO (Sticky)
+            // Ocultamos mapa/video para ver la imagen del plan
+            switchGlobalLayer('none');
             break;
     }
 }
@@ -110,6 +127,54 @@ function handleStepProgress(response)
         // Hacemos que aparezca un poco antes para que se lea bien al final
         caption.style.opacity = progress > 0.7 ? 1 : 0;
     }
+    }
+
+    // LÓGICA STEP 7: Tarjeta Azul Progresiva
+    if (step === '7') {
+        const card = element.querySelector('.blue-card');
+        
+        if (card) {
+            let opacity = 0;
+            let moveY = 0;
+
+            // FASE 1: ENTRADA (Del 10% al 30% del scroll)
+            // La tarjeta aparece y sube a su posición original
+            if (progress < 0.3) {
+                // Normalizamos el progreso de 0.1 a 0.3 en un rango de 0 a 1
+                let enterProgress = (progress - 0.1) / 0.2;
+                if (enterProgress < 0) enterProgress = 0;
+                if (enterProgress > 1) enterProgress = 1;
+
+                opacity = enterProgress; 
+                // Empieza 50px abajo y llega a 0px (su sitio)
+                moveY = 50 - (enterProgress * 50); 
+            }
+            
+            // FASE 2: LECTURA (Del 30% al 50%)
+            // Se queda quieta para que el usuario lea
+            else if (progress >= 0.3 && progress < 0.5) {
+                opacity = 1;
+                moveY = 0;
+            }
+
+            // FASE 3: SALIDA (Del 50% al 100%)
+            // Simula el scroll: la tarjeta se va hacia arriba hasta salir
+            else {
+                // Normalizamos el progreso de 0.5 a 1.0
+                let exitProgress = (progress - 0.5) / 0.5;
+                
+                // Opacidad: Se desvanece un poco al final para ser sutil
+                opacity = 1 - (exitProgress * 0.5); 
+                
+                // Movimiento: Se va hacia arriba (negativo). 
+                // -600px suele ser suficiente para sacarla de la pantalla en laptops/móviles
+                moveY = -600 * exitProgress; 
+            }
+
+            // APLICAMOS LOS CAMBIOS
+            card.style.opacity = opacity;
+            card.style.transform = `translateY(${moveY}px)`;
+        }
     }
 }
 
