@@ -208,33 +208,59 @@ p { line-height: 1.6; font-size: 1.1rem; }
     font-family: 'Merriweather', serif;
 }
 
-/* STEP 7 */
-.img-contain {
-    background-size: contain !important; /* Prioridad sobre cover */
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: #f4f4f4;
+/* --- STEP 7: ESTILO SCRAPBOOK --- */
+.step[data-step="7"] .sticky-item {
+    background-color: #f4f4f4 !important;
+    color: #333;
 }
 
+.scrapbook-container {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 5; /* Debajo de la tarjeta */
+    overflow: hidden;
+}
+
+.scrapbook-image {
+    width: 85%;
+    max-width: 900px;
+    height: auto;
+    
+    /* El borde y la sombra */
+    border: 15px solid #fff; 
+    box-shadow: 12px 12px 0px rgb(106, 79, 67); 
+    
+    /* Estado inicial */
+    transform: translateY(-150%);
+    will-change: transform;
+}
+
+/* --- TARJETA AZUL --- */
 .blue-card {
     position: absolute;
-    bottom: 5%; /* Margen del fondo */
-    left: 5%;   /* Margen de la izquierda */
+    bottom: 5%;
+    left: 5%;
     width: 90%;
-    max-width: 450px; /* Ancho máximo para que no se vea enorme en desktop */
+    max-width: 450px;
     
-    background-color: rgba(0, 48, 73, 0.9); /* #003049 al 90% opacidad */
+    background-color: rgba(0, 48, 73, 0.9);
     color: #ffffff;
     
     padding: 2rem;
-    border-radius: 8px; /* Bordes suaves */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* Sombra para profundidad */
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     
-    /* ESTADO INICIAL (Invisible y desplazado hacia abajo) */
+    /* Z-Index alto para estar encima de la foto */
+    z-index: 10; 
+    
+    /* ESTADO INICIAL */
     opacity: 0;
     transform: translateY(50px);
-    
-    /* IMPORTANTE: will-change para rendimiento */
     will-change: opacity, transform;
 }
 
@@ -328,7 +354,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
     align-items: center;
     overflow: hidden;
     will-change: transform; /* Optimización para GPU */
-    background-color: #f4f4f4;
+    background-color: #f9efe6;
 }
 
 /* 2. La imagen */
@@ -464,7 +490,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
     overflow: hidden;
     
     /* --- MÓVIL --- */
-    width: 6%;       
+    width: 55%;       
     max-width: none;
     /* --------------------------- */
     

@@ -184,51 +184,62 @@ function handleStepProgress(response)
     }
     }
 
-    // LÓGICA STEP 7: Tarjeta Azul Progresiva
+    // LÓGICA STEP 7: PLAN MAESTRO (Péndulo + Pausa + Texto + Lectura)
     if (step === '7') {
+        const img = element.querySelector('.scrapbook-image');
         const card = element.querySelector('.blue-card');
-        
-        if (card) {
-            let opacity = 0;
-            let moveY = 0;
 
-            // FASE 1: ENTRADA (Del 10% al 30% del scroll)
-            // La tarjeta aparece y sube a su posición original
-            if (progress < 0.3) {
-                // Normalizamos el progreso de 0.1 a 0.3 en un rango de 0 a 1
-                let enterProgress = (progress - 0.1) / 0.2;
-                if (enterProgress < 0) enterProgress = 0;
-                if (enterProgress > 1) enterProgress = 1;
+        // --- FASE 1: CAÍDA DE IMAGEN (0% al 45%) ---
+        // Acortamos un poco la caída para dejar más tiempo al final
+        const fallLimit = 0.45; 
 
-                opacity = enterProgress; 
-                // Empieza 50px abajo y llega a 0px (su sitio)
-                moveY = 50 - (enterProgress * 50); 
-            }
-            
-            // FASE 2: LECTURA (Del 30% al 50%)
-            // Se queda quieta para que el usuario lea
-            else if (progress >= 0.3 && progress < 0.5) {
-                opacity = 1;
-                moveY = 0;
-            }
+        if (img) {
+            if (progress < fallLimit) {
+                const phasePct = progress / fallLimit; 
 
-            // FASE 3: SALIDA (Del 50% al 100%)
-            // Simula el scroll: la tarjeta se va hacia arriba hasta salir
+                // Movimiento Y
+                const startY = -150; 
+                const endY = 0;
+                const currentY = startY + (phasePct * (endY - startY));
+
+                // Péndulo
+                const amplitude = 15; 
+                const decay = (1 - phasePct); 
+                const currentRot = amplitude * decay * Math.cos(phasePct * Math.PI * 4);
+
+                img.style.transform = `translate3d(0, ${currentY}%, 0) rotate(${currentRot}deg)`;
+            } 
             else {
-                // Normalizamos el progreso de 0.5 a 1.0
-                let exitProgress = (progress - 0.5) / 0.5;
-                
-                // Opacidad: Se desvanece un poco al final para ser sutil
-                opacity = 1 - (exitProgress * 0.5); 
-                
-                // Movimiento: Se va hacia arriba (negativo). 
-                // -600px suele ser suficiente para sacarla de la pantalla en laptops/móviles
-                moveY = -600 * exitProgress; 
+                // FASE 2: IMAGEN QUIETA (45% en adelante)
+                // Se mantiene firme el resto del paso
+                img.style.transform = `translate3d(0, 0%, 0) rotate(0deg)`;
             }
+        }
 
-            // APLICAMOS LOS CAMBIOS
-            card.style.opacity = opacity;
-            card.style.transform = `translateY(${moveY}px)`;
+        // --- FASE 3: TEXTO Y LECTURA (60% al 100%) ---
+        if (card) {
+            // Empezamos a mostrar el texto al 60%
+            const textStart = 0.60;
+            // Terminamos de mostrarlo al 85% (dejando el último 15% solo para leer)
+            const textEnd = 0.85;
+            
+            if (progress > textStart) {
+                // Calculamos opacidad entre 0 y 1
+                let cardProgress = (progress - textStart) / (textEnd - textStart);
+                
+                // --- CLAVE: ZONA DE LECTURA ---
+                // Si cardProgress pasa de 1 (es decir, estamos en el tramo 85%-100%),
+                // lo topamos a 1. Así el texto se queda visible y quieto.
+                if (cardProgress > 1) cardProgress = 1;
+
+                card.style.opacity = cardProgress;
+                // Entrada suave hacia arriba
+                card.style.transform = `translateY(${30 - (cardProgress * 30)}px)`;
+            } else {
+                // Oculto antes del 60%
+                card.style.opacity = 0;
+                card.style.transform = `translateY(30px)`;
+            }
         }
     }
 
