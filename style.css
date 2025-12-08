@@ -428,3 +428,135 @@ p { line-height: 1.6; font-size: 1.1rem; }
     opacity: 1;
     transform: translateY(0);
 }
+
+/* --- STEP 13: GALERÍA POLAROID --- */
+
+/* 1. Contenedor Principal */
+.gallery-container {
+    background-color: #f4f4f4; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* 2. La Fila de Fotos (MÓVIL / BASE) */
+.polaroid-row {
+    display: flex;
+    flex-direction: column; /* Columna por defecto */
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    
+    /* Ancho del contenedor en móvil */
+    width: 90%;
+    height: auto;
+}
+
+/* 3. El Marco Polaroid (MÓVIL / BASE) */
+.polaroid-frame {
+    background-color: #003049;
+    padding: 1rem 1rem 3rem 1rem; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+    
+    /* --- MÓVIL --- */
+    width: 6%;       
+    max-width: none;
+    /* --------------------------- */
+    
+    transition: transform 0.3s ease; 
+}
+
+.polaroid-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: sepia(10%) contrast(1.05); 
+}
+
+/* 4. Control de Aparición */
+.polaroid-wrapper {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    will-change: opacity, transform;
+    
+    /* Centramos el wrapper para móvil */
+    display: flex; 
+    justify-content: center;
+    width: 100%; /* Asegura que el wrapper llene la fila en móvil */
+}
+
+.polaroid-wrapper.is-visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 5. Rotaciones */
+.rot-left   { transform: rotate(-4deg) translateY(10px); }
+.rot-center { transform: rotate(0deg); z-index: 10; } 
+.rot-right  { transform: rotate(4deg) translateY(10px); }
+
+
+/* =========================================
+   MEDIA QUERY: PANTALLAS GRANDES (DESKTOP)
+   ========================================= */
+@media (min-width: 900px) {
+    
+    .polaroid-row {
+        flex-direction: row; /* Cambiamos a fila */
+        
+        /* --- DESKTOP --- */
+        width: 95%;
+        max-width: none; 
+        /* ----------------------------- */
+        
+        gap: 2%;
+        align-items: center; 
+    }
+
+    .polaroid-wrapper {
+        flex: 1; 
+        min-width: 0; 
+        /* En desktop, el wrapper ya no necesita ser 100% ancho, sino flexible */
+        width: auto; 
+    }
+
+    .polaroid-frame {
+        /* Forzamos a que llene el espacio del wrapper flexible */
+        width: 100%; 
+        
+        /* IMPORTANTE: Reseteamos el límite de móvil */
+        max-width: 100%; 
+        /* ------------------------ */
+        
+        height: auto;
+    }
+}
+
+
+/* =========================================
+   ANIMACIÓN DE FLASH (CÁMARA)
+   ========================================= */
+.flash-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #fff;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 20;
+}
+
+@keyframes cameraFlash {
+    0%   { opacity: 0.8; }
+    50%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.do-flash .flash-overlay {
+    animation: cameraFlash 0.6s ease-out forwards;
+}

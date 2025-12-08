@@ -103,6 +103,29 @@ function handleStepEnter(response) {
             if (box) box.classList.remove('is-visible'); // Ocultar caja
             if (caption) caption.classList.remove('is-visible'); // Ocultar texto
             break;
+        case '12':
+            // Step 12: 1972
+            switchGlobalLayer('map');
+            map.flyTo({ center: [-86.85, 21.16], zoom: 10, pitch: 0, speed: 0.5 });
+            break;
+        case '13':
+            switchGlobalLayer('none');
+            const polaroids = element.querySelectorAll('.polaroid-wrapper');
+            
+            // LÓGICA INTELIGENTE DE ENTRADA
+            if (direction === 'down') {
+                // A. VINIENDO DESDE ARRIBA (Normal)
+                // Reseteamos todo para que empiece la animación de cero
+                polaroids.forEach(p => p.classList.remove('is-visible', 'do-flash'));
+            } 
+            else {
+                // B. VINIENDO DESDE ABAJO (Regresando del Step 14)
+                polaroids.forEach(p => {
+                    p.classList.add('is-visible'); // Forzamos que se vean
+                    p.classList.remove('do-flash'); // Aseguramos que NO haya flash
+                });
+            }
+            break;
         default:
             switchGlobalLayer('none');
     }
@@ -301,6 +324,44 @@ function handleStepProgress(response)
             } else {
                 box.classList.remove('is-visible');
                 if (caption) caption.classList.remove('is-visible');
+            }
+        }
+    }
+
+    // LÓGICA STEP 13: Secuencia Flash Polaroid
+    if (step === '13') {
+        // Seleccionamos las 3 fotos por ID
+        const p1 = element.querySelector('#pol-1');
+        const p2 = element.querySelector('#pol-2');
+        const p3 = element.querySelector('#pol-3');
+
+        if (p1 && p2 && p3) {
+            // FASE 1: FOTO 1 (Izquierda) - Aparece al 15%
+            if (progress > 0.15) {
+                if (!p1.classList.contains('is-visible')) {
+                    p1.classList.add('is-visible', 'do-flash');
+                }
+            } else {
+                // Si regresamos hacia arriba, ocultamos
+                p1.classList.remove('is-visible', 'do-flash');
+            }
+
+            // FASE 2: FOTO 2 (Centro) - Aparece al 40%
+            if (progress > 0.40) {
+                if (!p2.classList.contains('is-visible')) {
+                    p2.classList.add('is-visible', 'do-flash');
+                }
+            } else {
+                p2.classList.remove('is-visible', 'do-flash');
+            }
+
+            // FASE 3: FOTO 3 (Derecha) - Aparece al 70%
+            if (progress > 0.70) {
+                if (!p3.classList.contains('is-visible')) {
+                    p3.classList.add('is-visible', 'do-flash');
+                }
+            } else {
+                p3.classList.remove('is-visible', 'do-flash');
             }
         }
     }
