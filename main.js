@@ -159,6 +159,20 @@ function handleStepEnter(response) {
                 });
             }
             break;
+        case '14':
+            // Step 14: AEROPUERTO
+            // Ocultamos el mapa de fondo para que se vean las imágenes del aeropuerto
+            switchGlobalLayer('none');
+            break;
+        case '15':
+            // Step 15: TEXTO AEROPUERTO
+            switchGlobalLayer('none');
+            break;
+
+        case '16':
+            // Step 16: PUENTE POBLACIÓN & PANEO 
+            switchGlobalLayer('none');
+            break;
         default:
             isStep9Active = false;
             switchGlobalLayer('none');
@@ -170,17 +184,19 @@ function handleStepProgress(response)
     {const { element, progress } = response;
     const step = element.dataset.step;
     
-    if (element.dataset.step === '3') {
-        // Seleccionamos el contenedor "sticky" dentro del step actual
+    // LÓGICA STEP 3 Y 14: Imágenes Sticky con Overlay
+    if (step === '3' || step === '14') {
+        
+        // Seleccionamos el contenedor "sticky" dentro del step actual (sea el 3 o el 14)
         const stickyItem = element.querySelector('.sticky-item');
         
-        if (!stickyItem) return;
-
-        // Lógica de Trigger (Umbral 30%)
-        if (progress > 0.3) {
-            stickyItem.classList.add('show-overlay');
-        } else {
-            stickyItem.classList.remove('show-overlay');
+        if (stickyItem) {
+            // Lógica de Trigger (Umbral 30%)
+            if (progress > 0.3) {
+                stickyItem.classList.add('show-overlay');
+            } else {
+                stickyItem.classList.remove('show-overlay');
+            }
         }
     }
 
@@ -433,6 +449,38 @@ function handleStepProgress(response)
                 }
             } else {
                 p3.classList.remove('is-visible', 'do-flash');
+            }
+        }
+    }
+    // LÓGICA STEP 16: Paneo Puente Población
+    if (step === '16') {
+        const wrapper = element.querySelector('.pop-content-wrapper');
+        const textCol = element.querySelector('.pop-text-col');
+
+        if (wrapper) {
+            // FASE 1: PANEO DE ENTRADA (0% - 50%)
+            // Trae todo el bloque desde la derecha hacia el centro
+            const panProgress = normalize(progress, 0.0, 0.5);
+            
+            const startX = 50; // Empieza 50% desplazado a la derecha
+            const endX = 0;    // Termina en 0% (Centro)
+            const currentX = startX - (panProgress * startX);
+
+            wrapper.style.opacity = panProgress; 
+            wrapper.style.transform = `translateX(${currentX}%)`;
+
+            // FASE 2: FADE DEL TEXTO (40% - 100%)
+            if (textCol) {
+                // Entrada (Fade In)
+                if (progress < 0.4) {
+                    textCol.style.opacity = 0;
+                } else if (progress >= 0.4 && progress < 0.9) {
+                    textCol.style.opacity = normalize(progress, 0.4, 0.6);
+                } 
+                // Salida (Fade Out al terminar el paso)
+                else {
+                    textCol.style.opacity = 1 - normalize(progress, 0.9, 1.0);
+                }
             }
         }
     }

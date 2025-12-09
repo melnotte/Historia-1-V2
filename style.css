@@ -634,3 +634,97 @@ p { line-height: 1.6; font-size: 1.1rem; }
 .do-flash .flash-overlay {
     animation: cameraFlash 0.6s ease-out forwards;
 }
+
+/* ---  STEP 14: AEROPUERTO --- */
+.step[data-step="14"] .full-image {
+    /* Reduce el brillo al 60% */
+    filter: brightness(0.6) contrast(1.1);
+}
+
+/* --- STEP 16: POBLACIÓN & PANEO --- */
+
+.pop-container {
+    width: 100%;
+    height: 100vh;
+    background-color: #780000; /* Fondo Rojo Vino */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.pop-content-wrapper {
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    max-width: 1200px;
+    gap: 4rem; 
+    
+    /* Estado inicial: desplazado a la derecha y oculto */
+    transform: translateX(100%); 
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+/* Columna de Texto */
+.pop-text-col {
+    flex: 1;
+    text-align: right; /* Alineamos todo a la derecha */
+    opacity: 0; 
+    transition: opacity 0.5s ease;
+    color: #ffffff;
+}
+
+.pop-text-col .lead-text {
+    font-size: 1.8rem;
+    font-family: 'Merriweather', serif;
+    color: #ffffff; 
+    margin-bottom: 0;
+}
+
+/* ESTILO DEL CAPTION CON LÍNEA ADAPTABLE */
+.pop-text-col .sticky-caption {
+    display: inline-block; /* Hace que la caja mida exactamente lo que el texto */
+    
+    /* La línea superior */
+    border-top: 1px solid rgba(255, 255, 255, 0.6);
+    padding-top: 1rem;
+    margin-top: 1rem;
+    
+    color: rgba(255, 255, 255, 0.9);
+    font-style: italic;
+    font-size: 1rem;
+    text-align: right; 
+}
+
+/* Columna de Imagen */
+.pop-img-col {
+    flex: 1.2; 
+    display: flex;
+    justify-content: flex-start;
+}
+
+.pop-gif {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4); 
+}
+
+/* Ajuste Móvil */
+@media (max-width: 800px) {
+    .pop-content-wrapper {
+        flex-direction: column-reverse; 
+        text-align: center;
+        gap: 2rem;
+    }
+    .pop-text-col { 
+        text-align: center; 
+    }
+    .pop-text-col .sticky-caption {
+        text-align: center; /* En móvil centramos el texto y la línea */
+    }
+}
