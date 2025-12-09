@@ -28,6 +28,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
 .global-layer {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     opacity: 0; transition: opacity 0.8s ease; visibility: hidden;
+    pointer-events: none;
 }
 .global-layer.is-active { opacity: 1; visibility: visible; }
 
@@ -293,6 +294,13 @@ p { line-height: 1.6; font-size: 1.1rem; }
     background: transparent !important;
 }
 
+#sand-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    object-position: top center; 
+}
+
 .sand-card {
     position: absolute;
     bottom: 5%;
@@ -313,7 +321,8 @@ p { line-height: 1.6; font-size: 1.1rem; }
     /* Estado Inicial */
     opacity: 0;
     transform: translateY(50px);
-    will-change: opacity, transform;
+
+    will-change: transform, opacity;
 }
 
 .sand-card .lead-text {

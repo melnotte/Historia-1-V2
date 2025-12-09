@@ -1,6 +1,11 @@
 // --- CONFIGURACIÓN ---
 mapboxgl.accessToken = 'pk.eyJ1IjoiZGVtb3VzZXIiLCJhIjoiY2x6Znh5eDkwMDBzNjJrb2x6Znh5eDkwIn0.F7_SAMPLE_TOKEN_HERE';
 
+// VARIABLES GLOBALES PARA SUAVIZADO DE VIDEO
+let sandVideoTarget = 0;   // Objetivo del scroll
+let sandVideoCurrent = 0;  // Posición actual suavizada
+let isStep9Active = false; // Interruptor del motor
+
 // 1. Inicializar Mapa
 const map = new mapboxgl.Map({
     container: 'map',
@@ -75,20 +80,48 @@ function handleStepEnter(response) {
             switchGlobalLayer('none');
             break;
         case '8':
-            // Step 8: TEXTO 1970
+            isStep9Active = false; // APAGAR MOTOR si venimos de abajo
             switchGlobalLayer('map');
-            map.flyTo({ center: [-86.82, 21.14], zoom: 11, pitch: 0, speed: 0.5 });
+            map.flyTo({ center: [-86.82, 21.14], zoom: 11, pitch: 0 });
             break;
+
         case '9':
-            // Step 9: VIDEO STICKY + TARJETA
+            // Step 9: ENCENDER MOTOR
             switchGlobalLayer('video2');
             const sandVid = document.getElementById('sand-video');
-            if(sandVid) sandVid.play().catch(()=>{});
+            
+            if (sandVid) {
+                sandVid.pause(); // Aseguramos que no se reproduzca solo
+
+                // --- LÓGICA DE DIRECCIÓN ---
+                if (response.direction === 'down') {
+                    // Si bajamos (venimos del paso 8), empezamos en 0
+                    sandVid.currentTime = 0;
+                    sandVideoTarget = 0;
+                    sandVideoCurrent = 0;
+                } else {
+                    // Si subimos (venimos del paso 10), empezamos al FINAL del video
+                    if (sandVid.duration) {
+                        // Restamos 0.1s para asegurar que se vea imagen
+                        const endPos = sandVid.duration - 0.1;
+                        sandVid.currentTime = endPos;
+                        sandVideoTarget = endPos;
+                        sandVideoCurrent = endPos;
+                    }
+                }
+            }
+            
+            // Arrancar el loop si no está prendido
+            if (!isStep9Active) {
+                isStep9Active = true;
+                sandVideoLoop(); 
+            }
             break;
+
         case '10':
-            // Step 10: TEXTO 1970-1973
+            isStep9Active = false; // APAGAR MOTOR si seguimos bajando
             switchGlobalLayer('map');
-            map.flyTo({ center: [-86.85, 21.16], zoom: 10, pitch: 0, speed: 0.5 });
+            map.flyTo({ center: [-86.85, 21.16], zoom: 10 });
             break;
         case '11':
             // Step 11: IMAGEN SUPERMANZANAS
@@ -127,6 +160,7 @@ function handleStepEnter(response) {
             }
             break;
         default:
+            isStep9Active = false;
             switchGlobalLayer('none');
     }
 }
@@ -243,29 +277,32 @@ function handleStepProgress(response)
         }
     }
 
-    // LÓGICA STEP 9: Tarjeta Arena
+    // LÓGICA STEP 9
     if (step === '9') {
+        const vid = document.getElementById('sand-video');
         const card = element.querySelector('.sand-card');
-        
+
+        // 1. SOLO ACTUALIZAMOS EL OBJETIVO
+        if (vid && vid.duration) {
+            sandVideoTarget = vid.duration * progress;
+        }
+
+        // 2. TARJETA
         if (card) {
             let opacity = 0;
             let moveY = 0;
 
-            // FASE 1: ENTRADA (0.1 a 0.3)
             if (progress < 0.3) {
                 let enterProgress = (progress - 0.1) / 0.2;
-                if (enterProgress < 0) enterProgress = 0;
+                if (enterProgress < 0) enterProgress = 0; 
                 if (enterProgress > 1) enterProgress = 1;
-
                 opacity = enterProgress; 
                 moveY = 50 - (enterProgress * 50); 
             }
-            // FASE 2: LECTURA (0.3 a 0.6 - un poco más largo)
             else if (progress >= 0.3 && progress < 0.6) {
                 opacity = 1;
                 moveY = 0;
             }
-            // FASE 3: SALIDA (0.6 a 1.0)
             else {
                 let exitProgress = (progress - 0.6) / 0.4;
                 opacity = 1 - (exitProgress * 0.5); 
@@ -376,6 +413,28 @@ function handleStepProgress(response)
             }
         }
     }
+}
+
+// El motor de suavizado (Loop infinito cuando el paso 9 está activo)
+const EASE_FACTOR = 0.08; 
+
+function sandVideoLoop() {
+    if (!isStep9Active) return;
+
+    const vid = document.getElementById('sand-video');
+    
+    // Verificamos readyState para evitar errores si no ha cargado
+    if (vid && vid.readyState >= 1) {
+        // Interpolación lineal (LERP)
+        sandVideoCurrent += (sandVideoTarget - sandVideoCurrent) * EASE_FACTOR;
+
+        // Solo actualizamos si el cambio es visible (ahorra CPU)
+        if (Math.abs(sandVideoTarget - sandVideoCurrent) > 0.005) {
+            vid.currentTime = sandVideoCurrent; 
+        }
+    }
+
+    requestAnimationFrame(sandVideoLoop);
 }
 
 function init() {
