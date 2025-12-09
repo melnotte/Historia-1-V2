@@ -184,38 +184,61 @@ function handleStepProgress(response)
         }
     }
 
-    // LÓGICA STEP 5: Zoom al Diario
+    // LÓGICA STEP 5: Zoom -> Secuencia de Subrayado -> Caption
     if (step === '5') {
-    const img = element.querySelector('.doc-image');
-    const caption = element.querySelector('.doc-caption');
+        const wrapper = element.querySelector('.doc-wrapper');
+        const caption = element.querySelector('.doc-caption');
+        const lines = element.querySelectorAll('.hl-line');
 
-    if (img) {
-        // --- CONFIGURACIÓN ---
-        
-        // 1. ZOOM: De pequeño (cabe en pantalla) a Real (Gigante)
-        const startScale = 0.33; 
-        const endScale = 1;
+        if (wrapper) {
+            // --- 1. ZOOM Y PANEO (0% a 60% del scroll) ---
+            
+            // Escala 0.33 para que la imagen de 300vh quepa en pantalla al inicio
+            const startScale = 0.33; 
+            const endScale = 1; 
+            
+            // Para centrar más arriba o abajo el párrafo
+            const startPanY = 0; 
+            const endPanY = -32; 
 
-        // 2. PANEO (Movimiento Vertical en %)
-        // 0 = Centro de la imagen en el centro de pantalla
-        // -30 = Mueve la imagen hacia ARRIBA un 30% de su altura (muestra la parte de abajo)
-        const startPanY = 0; 
-        const endPanY = -32; // <--- AJUSTA ESTE NÚMERO si quieres ver más abajo o más arriba
+            // Calculamos movimiento
+            const moveProgress = normalize(progress, 0.0, 0.60);
+            
+            const currentScale = startScale + (moveProgress * (endScale - startScale));
+            const currentPanY = startPanY + (moveProgress * (endPanY - startPanY));
+            
+            wrapper.style.transform = `translate3d(0, ${currentPanY}%, 0) scale(${currentScale})`;
 
-        // --- CÁLCULOS ---
-        const currentScale = startScale + (progress * (endScale - startScale));
-        const currentPanY = startPanY + (progress * (endPanY - startPanY));
+            // --- 2. SECUENCIA DE SUBRAYADO (60% a 85% del scroll) ---
+            // "Dibujamos" las líneas una por una usando el scroll
+            
+            const drawStart = 0.60;
+            const drawEnd = 0.85;
+            
+            // 0 a 1 dentro de la fase de dibujo
+            const drawProgress = normalize(progress, drawStart, drawEnd);
 
-        // --- APLICACIÓN ---
-        // Usamos translate3d para activar aceleración de hardware
-        img.style.transform = `translate3d(0, ${currentPanY}%, 0) scale(${currentScale})`;
-    }
+            if (lines.length > 0) {
+                const totalLines = lines.length;
+                
+                lines.forEach((line, index) => {
+                    // Cada línea tiene su propio "mini-tramo" dentro del progreso total
+                    const lineStart = index / totalLines;
+                    const lineEnd = (index + 1) / totalLines;
+                    
+                    // Calculamos qué tanto se debe mostrar ESTA línea
+                    let lineScale = normalize(drawProgress, lineStart, lineEnd);
+                    
+                    line.style.transform = `scaleX(${lineScale})`;
+                });
+            }
 
-    // Lógica del caption (texto)
-    if (caption) {
-        // Hacemos que aparezca un poco antes para que se lea bien al final
-        caption.style.opacity = progress > 0.7 ? 1 : 0;
-    }
+            // --- 3. CAPTION (85% a 95%) ---
+            const captionProgress = normalize(progress, 0.85, 0.95);
+            if (caption) {
+                caption.style.opacity = captionProgress;
+            }
+        }
     }
 
     // LÓGICA STEP 7: PLAN MAESTRO (Péndulo + Pausa + Texto + Lectura)
@@ -415,6 +438,10 @@ function handleStepProgress(response)
     }
 }
 
+// Convierte un rango global (ej. 0.2 a 0.8) en un valor 0 a 1
+function normalize(value, min, max) {
+    return Math.max(0, Math.min(1, (value - min) / (max - min)));
+}
 // El motor de suavizado (Loop infinito cuando el paso 9 está activo)
 const EASE_FACTOR = 0.08; 
 

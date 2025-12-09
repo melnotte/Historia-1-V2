@@ -173,40 +173,79 @@ p { line-height: 1.6; font-size: 1.1rem; }
 
 .spacer { height: 50vh; }
 
-/* --- STEP 5: DOCUMENTO --- */
-
+/* --- STEP 5: DOCUMENTO & HIGHLIGHT --- */
 .doc-container {
     position: relative;
     width: 100%;
     height: 100vh;
     height: 100dvh;
-    background-color: #f4f4f4; /* Fondo neutro para el documento */
-    overflow: hidden; /* IMPORTANTE: Para que el zoom no desborde la pantalla */
+    background-color: #f4f4f4; 
+    overflow: hidden; 
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.doc-image {
-    height: 300vh; 
-    width: auto;
-    object-fit: contain;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    /* El navegador usará el centro por defecto, que es lo que queremos para empezar */
+.doc-wrapper {
+    position: relative;
+    transform-origin: center center; 
     will-change: transform;
 }
 
+.doc-image {
+    /* CALIDAD MÁXIMA: 300vh */
+    /* Se verá nítida al hacer zoom, y la reduciremos con escala al inicio */
+    height: 300vh; 
+    width: auto;
+    display: block;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* --- ESTILOS DE LAS LÍNEAS DE SUBRAYADO --- */
+.hl-line {
+    position: absolute;
+    z-index: 2;
+    background-color: #facc15; /* Amarillo */
+    mix-blend-mode: multiply;   /* Efecto tinta */
+    opacity: 0.8;
+    
+    left: 6%;       /* Alineación izquierda fija para todas */
+    height: 1.5%;   /* Grosor fijo para todas */
+    
+    transform-origin: left center; /* Crecen de izq a der */
+    transform: scaleX(0);          /* Empiezan ocultas */
+    will-change: transform;        /* Optimización */
+}
+
+/* --- CALIBRACIÓN DE CADA LÍNEA (71% a 76%) --- */
+.line-1 { top: 71%; width: 44%; }
+.line-2 { top: 72%; width: 44%; }
+.line-3 { top: 73%; width: 44%; }
+.line-4 { top: 74%; width: 44%; }
+.line-5 { top: 75%; width: 44%; }
+/* Última línea más corta */
+.line-6 { top: 76%; width: 20%; }
+
+
+/* --- CAPTION (TEXTO FLOTANTE) --- */
 .doc-caption {
     position: absolute;
     bottom: 10%;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255,255,255,0.9);
-    padding: 1rem 2rem;
+    
+    background: rgba(255,255,255,0.95);
+    padding: 1.5rem 2rem;
     border-radius: 4px;
-    opacity: 0;
-    transition: opacity 0.5s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    
+    text-align: center;
     font-family: 'Merriweather', serif;
+    font-size: 1.1rem;
+    
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 10;
 }
 
 /* --- STEP 7: ESTILO SCRAPBOOK --- */
