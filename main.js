@@ -532,3 +532,82 @@ function init() {
 
 // Arrancar
 init();
+
+// VISUALIZACIÓN DE PUNTOS CON GSAP + SCROLLTRIGGER
+if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+    const contenedor = document.getElementById('visualizacion-puntos');
+    const contador = document.getElementById('contador-puntos');
+    const overlay = document.querySelector('.overlay-circle');
+    const PERSONS_PER_DOT = 1000;
+    if (contenedor) {
+        ScrollTrigger.create({
+            trigger: document.querySelector('.layout-dots'),
+            start: 'top top',
+            end: 'bottom bottom',
+            pin: contenedor,
+            pinSpacing: true
+        });
+        // Calcular total requerido desde las secciones (para asegurar exactitud)
+        const sections = document.querySelectorAll('#narrativa-dots .narrativa');
+        const total = Array.from(sections).reduce((acc, el) => acc + parseInt(el.dataset.dots || '0', 10), 0);
+        const puntos = [];
+        for (let i = 0; i < total; i++) {
+            const d = document.createElement('div');
+            d.className = 'punto';
+            contenedor.appendChild(d);
+            puntos.push(d);
+        }
+        let offset = 0;
+        const hudYear = document.getElementById('hud-year');
+        const percentageDisplay = document.getElementById('percentage-display');
+        const counts = Array.from(sections).map(sec => parseInt(sec.dataset.dots || '0', 10));
+        const cw = contenedor.clientWidth;
+        const ch = contenedor.clientHeight;
+        sections.forEach((seccion, index) => {
+            const cantidad = parseInt(seccion.dataset.dots || '0', 10);
+            const subset = puntos.slice(offset, offset + cantidad);
+            const startScale = index === 0 ? 0.55 : 0.85;
+            const endScale = index === 0 ? 0.85 : 1.15;
+            const color = index === 0 ? '#38bdf8' : '#fb923c';
+            const tl = gsap.timeline({
+                scrollTrigger: { trigger: seccion, start: 'top center', end: 'bottom center', scrub: true,
+                    onEnter: () => { if (hudYear) { const h = seccion.querySelector('h2'); hudYear.textContent = h ? h.textContent : String(1970 + index*10); } },
+                    onLeave: () => { if (contador) { const persons = (offset + cantidad) * PERSONS_PER_DOT; contador.textContent = persons.toLocaleString('es-MX'); } },
+                    onLeaveBack: () => { if (contador) { const persons = offset * PERSONS_PER_DOT; contador.textContent = persons.toLocaleString('es-MX'); } },
+                    onEnterBack: () => { if (hudYear) { const h = seccion.querySelector('h2'); hudYear.textContent = h ? h.textContent : String(1970 + index*10); } }
+                }
+            });
+            tl.to(subset, { opacity: 1, scale: 1, backgroundColor: color, duration: 1,
+                stagger: { each: 0.004 }, ease: 'none' }, 0);
+            tl.fromTo(overlay, { scale: startScale }, { scale: endScale, duration: 1, ease: 'none' }, 0);
+            tl.eventCallback('onUpdate', () => {
+                const p = tl.progress();
+                const currentDots = offset + Math.min(cantidad, Math.floor(cantidad * p));
+                const persons = currentDots * PERSONS_PER_DOT;
+                if (contador) contador.textContent = persons.toLocaleString('es-MX');
+                const n = currentDots;
+                if (n > 0) {
+                    const cols = Math.ceil(Math.sqrt(n * cw / ch));
+                    const rows = Math.ceil(n / cols);
+                    const cellW = cw / cols;
+                    const cellH = ch / rows;
+                    for (let i = 0; i < n; i++) {
+                        const c = i % cols;
+                        const r = Math.floor(i / cols);
+                        const x = (c + 0.5) * cellW - cw / 2;
+                        const y = (r + 0.5) * cellH - ch / 2;
+                        gsap.set(puntos[i], { x, y });
+                    }
+                }
+                if (percentageDisplay) {
+                    const prevDots = counts.slice(0, index).reduce((a, b) => a + b, 0);
+                    const growth = prevDots > 0 ? ((cantidad * PERSONS_PER_DOT) / (prevDots * PERSONS_PER_DOT)) : 0;
+                    const pct = Math.round(growth * 100 * p);
+                    percentageDisplay.textContent = `+${pct}%`;
+                }
+            });
+            offset += cantidad;
+        });
+    }
+}
