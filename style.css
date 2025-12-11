@@ -783,7 +783,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
 }
 
 /* --- ESTILOS STEP 19 --- */
-/* 1. Fondo Azul y Panel Principal */
+/* 1. Panel Principal Sticky */
 #resilience-panel {
     background-color: #669BBC;
     display: flex;
@@ -792,82 +792,85 @@ p { line-height: 1.6; font-size: 1.1rem; }
     width: 100%;
     height: 100vh;
     overflow: hidden;
+    
+    /* Se queda fijo mientras scrolleamos el track de 600vh */
     position: -webkit-sticky;
     position: sticky;
     top: 0;
     z-index: 25; 
 }
 
-/* 2. Wrapper General*/
+/* 2. Wrapper General */
 .resilience-wrapper {
     display: flex;
     flex-direction: row;
     width: 90%;
     max-width: 1400px;
     gap: 4rem;
-    align-items: center;
-    opacity: 1; 
-    transform: none; 
+    align-items: stretch; /* Estira las columnas al alto total */
+    height: 100vh;        /* Ocupa toda la pantalla */
 }
 
-/* 3. Columnas 50% / 50% */
-.res-vid-col, .res-text-col {
+/* 3. Columna Video (Izquierda) - Centrada verticalmente */
+.res-vid-col {
     flex: 1;
     display: flex;
+    align-items: center;     /* Centra el video verticalmente */
     justify-content: center;
-    flex-direction: column;
-    text-align: justify;
 }
 
-/* 4. Estilos del Texto (Estado Inicial: A la derecha) */
+/* 4. Columna Texto (Derecha) - CAJA AZUL OSCURA */
 .res-text-col {
-    opacity: 0;
-    transform: translateX(100px); 
-    will-change: opacity, transform;
+    flex: 1;
+    /* Semitransparente (0.9 de opacidad) */
+    background-color: rgba(0, 48, 73, 0.9); 
+    /* Ocupa todo el alto */
+    height: 100vh; 
+    /* Máscara: Esconde el texto cuando está abajo antes de subir */
+    overflow: hidden; 
+    /* Flex para alinear el contenido interno */
+    display: flex;
+    align-items: center; /* Centrado inicialmente */
+    justify-content: center;
+    text-align: justify;
+    position: relative;
+    transform: none; 
+    opacity: 1; 
 }
 
-/* Tipografía para fondo oscuro */
-.light-heading { color: #fff; font-size: 2.2rem; margin-bottom: 1rem; line-height: 1.2; }
-.light-text { color: rgba(255,255,255,0.95); font-size: 1.1rem; }
-.quote-box { border-left: 4px solid rgba(255,255,255,0.6); padding-left: 1.5rem; margin-top: 2rem; }
-.highlight-p { color: #fff; font-style: italic; font-weight: 500; font-size: 1.15rem; }
+/* 5. El Contenido que se desliza */
+.sliding-content {
+    padding: 3rem; /* Margen interno */
+    max-width: 600px;
+    /* Estado inicial manejado por JS, pero por defecto visible */
+    will-change: transform;
+}
 
-/* 5. Video: Recto, con sombra y funcional */
+/* Ajustes de Tipografía */
+.light-heading { color: #fff; font-size: 2.2rem; margin-bottom: 1.5rem; line-height: 1.2; }
+.light-text { color: rgba(255,255,255,0.95); font-size: 1.15rem; margin-bottom: 1.5rem; }
+.quote-box { border-left: 4px solid #C1121F; padding-left: 1.5rem; margin-top: 2rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 0 8px 8px 0; }
+.highlight-p { color: #fff; font-style: italic; font-weight: 500; font-size: 1.1rem; margin: 0; }
+
+/* Video Wrapper */
 .yt-video-wrapper {
-    position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
     background: #000;
     border-radius: 8px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    overflow: hidden;
-    
-    /* Sin rotación */
-    transform: translateZ(0); 
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    transform: translateZ(0);
 }
+.yt-video-wrapper iframe { pointer-events: auto; }
 
-/* Interacción Hover suave */
-.yt-video-wrapper:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-    border-color: rgba(255, 255, 255, 0.6);
-}
-
-/* Permitir clics en YouTube */
-.yt-video-wrapper iframe {
-    width: 100%;
-    height: 100%;
-    display: block;
-    pointer-events: auto; 
-}
-
-/* Responsivo Móvil */
+/* Móvil */
 @media (max-width: 900px) {
-    .resilience-wrapper {
-        flex-direction: column-reverse; /* Video arriba, texto abajo en móvil */
-        gap: 2rem;
+    .resilience-wrapper { 
+        flex-direction: column; 
+        gap: 0;
     }
-    .light-heading { font-size: 1.8rem; }
+    .res-text-col { height: 50vh; padding: 1rem; }
+    .res-vid-col { height: 50vh; }
+    .sliding-content { padding: 1.5rem; }
+    .light-heading { font-size: 1.5rem; }
 }

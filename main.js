@@ -191,19 +191,11 @@ function handleStepEnter(response) {
             }); 
             break;
         case '19':
-            // Step 19: RESILIENCIA (Fondo Azul)
-            // 1. Apagamos capas globales (mapa, videos de fondo) porque este step tiene su propio fondo.
+            // Step 19: RESILIENCIA
             switchGlobalLayer('none');
             
-            // 2. Lógica de RETORNO (Si el usuario viene de abajo hacia arriba)
-            // Si el usuario ya pasó por aquí y regresa, queremos que el texto se vea 
-            // en su posición final (sin animar la entrada de nuevo).
+            // Si el usuario regresa subiendo, reseteamos posición
             if (response.direction === 'up') {
-                const textCol = element.querySelector('.res-text-col');
-                if(textCol) {
-                    textCol.style.opacity = 1; // Totalmente visible
-                    textCol.style.transform = 'translateX(0px)'; // En su lugar (Centro)
-                }
             }
             break;
         default:
@@ -517,23 +509,28 @@ function handleStepProgress(response)
             }
         }
     }
-    // LÓGICA STEP 19: Paneo Texto (Entra desde la DERECHA) + Sticky
+    // LÓGICA STEP 19: Texto subiendo (Scroll vertical)
     if (step === '19') {
-        const textCol = element.querySelector('.res-text-col');
+        const textContent = element.querySelector('.sliding-content');
         
-        // FASE DE ANIMACIÓN: 0% al 20% del scroll
-        const enterProgress = normalize(progress, 0.0, 0.20);
-        
-        if (textCol) {
-            // 1. OPACIDAD (De 0 a 1)
-            textCol.style.opacity = enterProgress;
+        if (textContent) {
+            // RANGO DE ANIMACIÓN:
+            const startY = 100; // Empieza abajo (oculto)
             
-            // 2. MOVIMIENTO (De Derecha a Centro)
-            // Fórmula: Start (100px) -> End (0px)
-            // 100 - (1 * 100) = 0
-            const currentX = 100 - (enterProgress * 100);
+            // 30% para asegurar que suba lo suficiente y se vea el final
+            const endY = -20;   
             
-            textCol.style.transform = `translateX(${currentX}px)`;
+            // Interpolación Lineal
+            const currentY = startY - (progress * (startY - endY));
+            
+            textContent.style.transform = `translateY(${currentY}%)`;
+            
+            // Opacidad inicial suave
+            if (progress < 0.1) {
+                textContent.style.opacity = progress * 10;
+            } else {
+                textContent.style.opacity = 1;
+            }
         }
     }
 }
