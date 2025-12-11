@@ -607,52 +607,84 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
         const hudYear = document.getElementById('hud-year');
         const percentageDisplay = document.getElementById('percentage-display');
         const counts = Array.from(sections).map(sec => parseInt(sec.dataset.dots || '0', 10));
+        const personsByDecade = [6867, 37190, 176765, 419815, 659311, 911503];
         const cw = contenedor.clientWidth;
         const ch = contenedor.clientHeight;
+        const colsTotal = Math.ceil(Math.sqrt(total * cw / ch));
+        const rowsTotal = Math.ceil(total / colsTotal);
+        const cellWTotal = cw / colsTotal;
+        const cellHTotal = ch / rowsTotal;
+        const DOT_SIZE = 10;
+        const finalScale = Math.min(cellWTotal, cellHTotal) / DOT_SIZE * 0.75;
+        for (let i = 0; i < total; i++) {
+            const c = i % colsTotal;
+            const r = Math.floor(i / colsTotal);
+            const x = Math.round((c + 0.5) * cellWTotal - cw / 2);
+            const y = Math.round((r + 0.5) * cellHTotal - ch / 2);
+            gsap.set(puntos[i], { x, y });
+        }
+        const order = [];
+        for (let c = 0; c < colsTotal; c++) {
+            for (let r = rowsTotal - 1; r >= 0; r--) {
+                const idx = r * colsTotal + c;
+                if (idx < total) order.push(idx);
+            }
+        }
+        const palette = ['#780000','#C1121F','#FDF0D5','#003049','#669BBC'];
         sections.forEach((seccion, index) => {
             const cantidad = parseInt(seccion.dataset.dots || '0', 10);
-            const subset = puntos.slice(offset, offset + cantidad);
+            const subset = order.slice(offset, offset + cantidad).map(i => puntos[i]);
             const startScale = index === 0 ? 0.55 : 0.85;
             const endScale = index === 0 ? 0.85 : 1.15;
-            const color = index === 0 ? '#38bdf8' : '#fb923c';
+            const color = palette[index] ?? palette[index % palette.length];
+            const isLast = index === sections.length - 1;
             const tl = gsap.timeline({
-                scrollTrigger: { trigger: seccion, start: 'top center', end: 'bottom center', scrub: true,
+                scrollTrigger: {
+                    trigger: seccion,
+                    start: isLast ? 'top top' : 'top center',
+                    end: isLast ? 'bottom bottom' : 'bottom bottom',
+                    endTrigger: isLast ? document.querySelector('.layout-dots') : undefined,
+                    scrub: true,
+                    pin: isLast,
+                    pinSpacing: true,
                     onEnter: () => { if (hudYear) { const h = seccion.querySelector('h2'); hudYear.textContent = h ? h.textContent : String(1970 + index*10); } },
-                    onLeave: () => { if (contador) { const persons = (offset + cantidad) * PERSONS_PER_DOT; contador.textContent = persons.toLocaleString('es-MX'); } },
-                    onLeaveBack: () => { if (contador) { const persons = offset * PERSONS_PER_DOT; contador.textContent = persons.toLocaleString('es-MX'); } },
+                    onLeave: () => { if (contador) { const persons = (personsByDecade[index] || cantidad * PERSONS_PER_DOT); contador.textContent = persons.toLocaleString('es-MX'); } },
+                    onLeaveBack: () => { if (contador) { contador.textContent = '0'; } },
                     onEnterBack: () => { if (hudYear) { const h = seccion.querySelector('h2'); hudYear.textContent = h ? h.textContent : String(1970 + index*10); } }
                 }
             });
-            tl.to(subset, { opacity: 1, scale: 1, backgroundColor: color, duration: 1,
+            tl.to(subset, { opacity: 1, scale: finalScale, backgroundColor: color, duration: 1,
                 stagger: { each: 0.004 }, ease: 'none' }, 0);
             tl.fromTo(overlay, { scale: startScale }, { scale: endScale, duration: 1, ease: 'none' }, 0);
             tl.eventCallback('onUpdate', () => {
                 const p = tl.progress();
-                const currentDots = offset + Math.min(cantidad, Math.floor(cantidad * p));
-                const persons = currentDots * PERSONS_PER_DOT;
+                const targetPersonsExact = personsByDecade[index] || (cantidad * PERSONS_PER_DOT);
+                const persons = Math.round(targetPersonsExact * p);
                 if (contador) contador.textContent = persons.toLocaleString('es-MX');
-                const n = currentDots;
-                if (n > 0) {
-                    const cols = Math.ceil(Math.sqrt(n * cw / ch));
-                    const rows = Math.ceil(n / cols);
-                    const cellW = cw / cols;
-                    const cellH = ch / rows;
-                    for (let i = 0; i < n; i++) {
-                        const c = i % cols;
-                        const r = Math.floor(i / cols);
-                        const x = (c + 0.5) * cellW - cw / 2;
-                        const y = (r + 0.5) * cellH - ch / 2;
-                        gsap.set(puntos[i], { x, y });
-                    }
-                }
                 if (percentageDisplay) {
-                    const prevDots = counts.slice(0, index).reduce((a, b) => a + b, 0);
-                    const growth = prevDots > 0 ? ((cantidad * PERSONS_PER_DOT) / (prevDots * PERSONS_PER_DOT)) : 0;
-                    const pct = Math.round(growth * 100 * p);
+                    const prevExact = personsByDecade.slice(0, index).reduce((a, b) => a + b, 0);
+                    const growth = prevExact > 0 ? (targetPersonsExact / prevExact) - 1 : 0;
+                    const pct = Math.round(Math.max(0, growth) * 100 * p);
                     percentageDisplay.textContent = `+${pct}%`;
                 }
             });
             offset += cantidad;
+        });
+        window.addEventListener('resize', () => {
+            const cw2 = contenedor.clientWidth;
+            const ch2 = contenedor.clientHeight;
+            const cols2 = Math.ceil(Math.sqrt(total * cw2 / ch2));
+            const rows2 = Math.ceil(total / cols2);
+            const cellW2 = cw2 / cols2;
+            const cellH2 = ch2 / rows2;
+            for (let i = 0; i < total; i++) {
+                const c = i % cols2;
+                const r = Math.floor(i / cols2);
+                const x = Math.round((c + 0.5) * cellW2 - cw2 / 2);
+                const y = Math.round((r + 0.5) * cellH2 - ch2 / 2);
+                gsap.set(puntos[i], { x, y });
+            }
+            ScrollTrigger.refresh();
         });
     }
 }

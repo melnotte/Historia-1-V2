@@ -730,27 +730,32 @@ p { line-height: 1.6; font-size: 1.1rem; }
 }
 
 /* --- ESTILOS SECCIÓN DE CRECIMIENTO COMO PUNTOS --- */
-.layout-dots { display: flex; min-height: 100vh; }
+.layout-dots { display: flex; align-items: stretch; }
 #visualizacion-puntos {
     position: relative;
     width: 50vw;
     height: 100vh;
     overflow: hidden;
     padding: 16px;
+    box-sizing: border-box;
     background: #ffffff;
     border-right: 1px solid #e6e6e6;
 }
-.hud { position: absolute; left: 16px; top: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
+.hud { position: absolute; right: 16px; left: auto; top: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 50; align-items: flex-end; }
 #hud-year { font-weight: 800; font-size: clamp(2rem, 5vw, 4rem); color: rgba(2,48,71,0.2); line-height: 1; }
-#contador-puntos { font-weight: 800; font-size: clamp(1.5rem, 3.5vw, 3rem); color: #023047; }
-#percentage-display { font-weight: 700; font-size: clamp(1rem, 2.5vw, 2rem); color: #fb923c; }
+#contador-puntos { font-weight: 800; font-size: clamp(1.5rem, 3.5vw, 3rem); color: #023047; background: rgba(255,255,255,0.9); padding: 6px 10px; border-radius: 6px; }
+#percentage-display { font-weight: 700; font-size: clamp(1rem, 2.5vw, 2rem); color: #fb923c; background: rgba(255,255,255,0.9); padding: 4px 8px; border-radius: 6px; }
 .overlay-circle { position: absolute; left: 50%; top: 50%; width: 150vmax; height: 150vmax; border-radius: 50%; background: radial-gradient(circle at center, rgba(2,48,71,0.15), rgba(2,48,71,0)); transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
 #narrativa-dots { width: 50vw; }
 .narrativa { padding: 10vh 8vw; min-height: 120vh; border-bottom: 1px solid #f0f0f0; }
 .narrativa h2 { margin: 0 0 1rem 0; color: #023047; font-weight: 600; }
 .narrativa p { line-height: 1.6; font-size: 1rem; }
 .punto { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; border-radius: 50%; background: #023047; opacity: 0; transform: translate(-50%, -50%) scale(0.5); will-change: transform, opacity; }
-
+@media (max-width: 768px) {
+    .layout-dots { flex-direction: column; }
+    #visualizacion-puntos { width: 100vw; height: 70vh; padding: 12px; }
+    #narrativa-dots { width: 100vw; }
+}
 
 /* --- ESTILOS PARA EL SEGUNDO ARTICLE --- */
 /* Asegura que el contenido nuevo tenga fondo transparente */
