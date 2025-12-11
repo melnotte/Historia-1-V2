@@ -177,6 +177,35 @@ function handleStepEnter(response) {
             // Step 17: TEXTO 1970-1980
             switchGlobalLayer('none');
             break;
+
+        // El usuario scrollea por la sección de puntos. Scrollama espera hasta el 18.
+
+        case '18':
+            // Step 18: EL RETORNO AL MAPA (1980)
+            switchGlobalLayer('map');
+            map.flyTo({ 
+                center: [-86.8475, 21.1619],
+                zoom: 11, 
+                pitch: 0,
+                speed: 1.2
+            }); 
+            break;
+        case '19':
+            // Step 19: RESILIENCIA (Fondo Azul)
+            // 1. Apagamos capas globales (mapa, videos de fondo) porque este step tiene su propio fondo.
+            switchGlobalLayer('none');
+            
+            // 2. Lógica de RETORNO (Si el usuario viene de abajo hacia arriba)
+            // Si el usuario ya pasó por aquí y regresa, queremos que el texto se vea 
+            // en su posición final (sin animar la entrada de nuevo).
+            if (response.direction === 'up') {
+                const textCol = element.querySelector('.res-text-col');
+                if(textCol) {
+                    textCol.style.opacity = 1; // Totalmente visible
+                    textCol.style.transform = 'translateX(0px)'; // En su lugar (Centro)
+                }
+            }
+            break;
         default:
             isStep9Active = false;
             switchGlobalLayer('none');
@@ -486,6 +515,25 @@ function handleStepProgress(response)
                     textCol.style.opacity = 1 - normalize(progress, 0.9, 1.0);
                 }
             }
+        }
+    }
+    // LÓGICA STEP 19: Paneo Texto (Entra desde la DERECHA) + Sticky
+    if (step === '19') {
+        const textCol = element.querySelector('.res-text-col');
+        
+        // FASE DE ANIMACIÓN: 0% al 20% del scroll
+        const enterProgress = normalize(progress, 0.0, 0.20);
+        
+        if (textCol) {
+            // 1. OPACIDAD (De 0 a 1)
+            textCol.style.opacity = enterProgress;
+            
+            // 2. MOVIMIENTO (De Derecha a Centro)
+            // Fórmula: Start (100px) -> End (0px)
+            // 100 - (1 * 100) = 0
+            const currentX = 100 - (enterProgress * 100);
+            
+            textCol.style.transform = `translateX(${currentX}px)`;
         }
     }
 }

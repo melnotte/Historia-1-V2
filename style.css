@@ -729,7 +729,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
     }
 }
 
-/* ESTILOS SECCIÓN DE CRECIMIENTO COMO PUNTOS */
+/* --- ESTILOS SECCIÓN DE CRECIMIENTO COMO PUNTOS --- */
 .layout-dots { display: flex; min-height: 100vh; }
 #visualizacion-puntos {
     position: relative;
@@ -750,3 +750,124 @@ p { line-height: 1.6; font-size: 1.1rem; }
 .narrativa h2 { margin: 0 0 1rem 0; color: #023047; font-weight: 600; }
 .narrativa p { line-height: 1.6; font-size: 1rem; }
 .punto { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; border-radius: 50%; background: #023047; opacity: 0; transform: translate(-50%, -50%) scale(0.5); will-change: transform, opacity; }
+
+
+/* --- ESTILOS PARA EL SEGUNDO ARTICLE --- */
+/* Asegura que el contenido nuevo tenga fondo transparente */
+#chapter-3 {
+    background-color: transparent; 
+    pointer-events: none; /* Permite ver y (opcionalmente) interactuar con el mapa debajo */
+    margin-top: 0; /* Pegado a la sección de puntos */
+    padding-bottom: 20vh;
+}
+
+/* Pero el texto y las cajas deben ser visibles y clickeables */
+#chapter-3 .step-content {
+    background: transparent;
+    padding: 2.5rem;
+    border-radius: 4px;
+    box-shadow: none;
+    pointer-events: auto;
+    opacity: 0.2; transition: opacity 0.4s, transform 0.4s;
+    transform: translateY(20px);
+}
+#chapter-3 .step.is-active .step-content { opacity: 1; transform: translateY(0); }
+#chapter-3 .sticky-caption-a2 {
+    border-left: 4px solid #C1121F;
+    padding-left: 16px; 
+    display: block;
+    height: fit-content;
+    font-size: 0.95rem;
+    font-style: italic;
+    margin-top: 1rem;
+}
+
+/* --- ESTILOS STEP 19 --- */
+/* 1. Fondo Azul y Panel Principal */
+#resilience-panel {
+    background-color: #669BBC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 25; 
+}
+
+/* 2. Wrapper General*/
+.resilience-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    max-width: 1400px;
+    gap: 4rem;
+    align-items: center;
+    opacity: 1; 
+    transform: none; 
+}
+
+/* 3. Columnas 50% / 50% */
+.res-vid-col, .res-text-col {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: justify;
+}
+
+/* 4. Estilos del Texto (Estado Inicial: A la derecha) */
+.res-text-col {
+    opacity: 0;
+    transform: translateX(100px); 
+    will-change: opacity, transform;
+}
+
+/* Tipografía para fondo oscuro */
+.light-heading { color: #fff; font-size: 2.2rem; margin-bottom: 1rem; line-height: 1.2; }
+.light-text { color: rgba(255,255,255,0.95); font-size: 1.1rem; }
+.quote-box { border-left: 4px solid rgba(255,255,255,0.6); padding-left: 1.5rem; margin-top: 2rem; }
+.highlight-p { color: #fff; font-style: italic; font-weight: 500; font-size: 1.15rem; }
+
+/* 5. Video: Recto, con sombra y funcional */
+.yt-video-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 8px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    
+    /* Sin rotación */
+    transform: translateZ(0); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Interacción Hover suave */
+.yt-video-wrapper:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Permitir clics en YouTube */
+.yt-video-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: auto; 
+}
+
+/* Responsivo Móvil */
+@media (max-width: 900px) {
+    .resilience-wrapper {
+        flex-direction: column-reverse; /* Video arriba, texto abajo en móvil */
+        gap: 2rem;
+    }
+    .light-heading { font-size: 1.8rem; }
+}
