@@ -173,6 +173,10 @@ function handleStepEnter(response) {
             // Step 16: PUENTE POBLACIÓN & PANEO 
             switchGlobalLayer('none');
             break;
+        case '17':
+            // Step 17: TEXTO 1970-1980
+            switchGlobalLayer('none');
+            break;
         default:
             isStep9Active = false;
             switchGlobalLayer('none');
