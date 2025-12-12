@@ -1,5 +1,5 @@
 // --- CONFIGURACIÓN ---
-mapboxgl.accessToken = 'pk.eyJ1IjoiZGVtb3VzZXIiLCJhIjoiY2x6Znh5eDkwMDBzNjJrb2x6Znh5eDkwIn0.F7_SAMPLE_TOKEN_HERE';
+mapboxgl.accessToken = 'pk.eyJ1IjoiMHhqZmVyIiwiYSI6ImNtZjRjNjczdTA0MGsya3Bwb3B3YWw4ejgifQ.8IZ5PTYktl5ss1gREda3fg';
 
 // VARIABLES GLOBALES PARA SUAVIZADO DE VIDEO
 let sandVideoTarget = 0;   // Objetivo del scroll
@@ -12,7 +12,126 @@ const map = new mapboxgl.Map({
     style: 'mapbox://styles/mapbox/light-v11', 
     center: [-86.85, 21.16], 
     zoom: 10,
-    interactive: false
+    
+    interactive: true,      // 1. Habilitamos la interactividad general
+    scrollZoom: false,      // 2. BLOQUEAMOS el zoom con scroll
+    dragPan: true,          // 3. Permitimos mover el mapa (Clic sostenido + arrastrar)
+    doubleClickZoom: true,  // 4. Doble clic = Zoom In (Estándar de mapas)
+    touchZoomRotate: false, // 5. Opcional: Evita rotaciones accidentales en móvil
+    dragRotate: false       // 6. Opcional: Mantiene el mapa orientado al Norte siempre
+});
+
+map.addControl(new mapboxgl.NavigationControl({
+    showCompass: true, // Muestra la brújula 
+    showZoom: true     // Muestra botones + y -
+}), 'bottom-right');
+
+map.on('load', () => {
+
+    // 1. CARGAR FUENTE
+    map.addSource('src-cambio-poblacional', {
+        type: 'geojson',
+        // Asegúrate que la ruta sea correcta en tu carpeta actual
+        data: 'data/cambio-poblacional.geojson' 
+    });
+
+    // 2. AGREGAR CAPA BASE (Rampa Verde Monocromática)
+    map.addLayer({
+        id: 'layer-cambio-poblacional',
+        type: 'fill',
+        source: 'src-cambio-poblacional',
+        layout: { 'visibility': 'visible' },
+        paint: {
+            // RAMPA EXACTA DEL PROYECTO ANTERIOR (Expresión 'step')
+            'fill-color': [
+                'step',
+                ['coalesce', ['to-number', ['get', 'p100_dife_pob']], 0], // Manejo de nulos
+                '#f7fcf5',      // <= -75 (Pérdida intensa)
+                -75, '#e5f5e0', // -75 a -50
+                -50, '#c7e9c0', // -50 a -25
+                -25, '#a1d99b', // -25 a 0
+                0,   '#74c476', // 0 a 25
+                25,  '#41ab5d', // 25 a 50
+                50,  '#238b45', // 50 a 75
+                75,  '#006d2c', // 75 a 100
+                100, '#00441b'  // >= 100 (Expansión acelerada)
+            ],
+            'fill-opacity': 0, // Empieza invisible, GSAP lo subirá a 0.85
+            'fill-outline-color': '#ffffff' // Borde blanco como en el original
+        }
+    });
+
+    // 3. AGREGAR CAPA DE HUELLA URBANA (Overlay para el scroll)
+    map.addSource('src-geo', {
+        type: 'geojson',
+        data: 'data/geo.json'
+    });
+
+    map.addLayer({
+        id: 'layer-geo',
+        type: 'fill',
+        source: 'src-geo',
+        layout: { 'visibility': 'visible' },
+        paint: {
+            'fill-color': '#023047', // Un azul oscuro/negro para contrastar con los verdes
+            'fill-opacity': 0        // Empieza invisible
+        }
+    });
+
+    // 4. TOOLTIP MEJORADO (Interacción Hover)
+    const popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        offset: 20 // Un poco más de espacio
+    });
+
+    // Usamos 'mousemove' para que el popup siga al cursor dentro del polígono
+    map.on('mousemove', 'layer-cambio-poblacional', (e) => {
+        
+        // A. Verificar visibilidad (Tu lógica original es excelente, la mantenemos)
+        const opacity = map.getPaintProperty('layer-cambio-poblacional', 'fill-opacity');
+        if (opacity < 0.1 || !e.features.length) return;
+
+        // B. Cambiar cursor
+        map.getCanvas().style.cursor = 'pointer';
+
+        // C. Extraer datos
+        const props = e.features[0].properties;
+        const pob2020 = Number(props.POBTOT || props.Pob2020 || 0);
+        const pob2010 = Number(props.Pob2010 || 0);
+        // Cálculo de porcentaje seguro
+        const difPct = Number(props.p100_dife_pob || ((pob2010 !== 0) ? ((pob2020 - pob2010) / pob2010) * 100 : 0));
+
+        // D. Definir color dinámico para el porcentaje
+        const colorPct = difPct >= 0 ? '#238b45' : '#C1121F'; // Verde si crece, Rojo si decrece
+
+        // E. HTML con las NUEVAS CLASES (popup-header, popup-data, etc.)
+        const html = `
+            <div class="popup-header">AGEB ${props.CVE_AGEB || props.cvegeo || ''}</div>
+            
+            <div class="popup-data" style="color: ${colorPct}">
+                ${difPct > 0 ? '+' : ''}${difPct.toFixed(1)}%
+            </div>
+            
+            <div class="popup-label">Cambio 2010-2020</div>
+            
+            <div style="margin-top: 8px; font-size: 11px; color: #555; border-top: 1px solid #eee; padding-top: 4px;">
+                <strong>2010:</strong> ${pob2010.toLocaleString()}<br>
+                <strong>2020:</strong> ${pob2020.toLocaleString()}
+            </div>
+        `;
+
+        // F. Renderizar
+        popup.setLngLat(e.lngLat)
+             .setHTML(html)
+             .addTo(map);
+    });
+
+    // Limpieza al salir
+    map.on('mouseleave', 'layer-cambio-poblacional', () => {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
+    });
 });
 
 // 2. Control de Capas Globales
@@ -191,6 +310,27 @@ function handleStepEnter(response) {
             
             // Si el usuario regresa subiendo, reseteamos posición
             if (response.direction === 'up') {
+            }
+            break;
+        case '20':
+            switchGlobalLayer('none');
+            break;
+        case '21':
+            switchGlobalLayer('map');
+            
+            map.flyTo({ 
+                center: [-86.85, 21.16], 
+                zoom: 11, 
+                pitch: 0 
+            });
+
+            // Aseguramos que la capa base sea visible desde el inicio del paso
+            if (map.getLayer('layer-cambio-poblacional')) {
+                map.setPaintProperty('layer-cambio-poblacional', 'fill-opacity', 0.85);
+            }
+            // La capa overlay empieza invisible (GSAP se encargará)
+            if (map.getLayer('layer-geo')) {
+                map.setPaintProperty('layer-geo', 'fill-opacity', 0);
             }
             break;
         default:
@@ -575,7 +715,7 @@ function init() {
 init();
 
 // ======================================================
-// ZONA GSAP (Puntos + Step 18 Expansión)
+// ZONA GSAP (Puntos + Step 18 + Step 21)
 // ======================================================
 
 if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
@@ -775,5 +915,71 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
         
         tlExpansion.to('.expansion-gallery', { opacity: 0.1, duration: 1 }, "<");
 
+    }
+
+    // ------------------------------------------------------
+    // C. LÓGICA STEP 21: PINTAR MAPA + SECUENCIA DE TEXTO
+    // ------------------------------------------------------
+    const stepMap = document.querySelector("#step-map-compare");
+
+    if (stepMap) {
+        const cards = document.querySelectorAll('.story-card');
+
+        ScrollTrigger.create({
+            trigger: "#step-map-compare",
+            start: "top top",      
+            end: "bottom bottom",  
+            scrub: true,           
+            
+            onUpdate: (self) => {
+                const p = self.progress; 
+
+                // --- 1. LÓGICA DEL MAPA ---
+                
+                // A) Si existe la capa de Población, aseguramos que se vea
+                if (map.getLayer('layer-cambio-poblacional')) {
+                    map.setPaintProperty('layer-cambio-poblacional', 'fill-opacity', 0.85);
+                }
+
+                // B) Si existe otra capa
+                if (map.getLayer('layer-geo')) {
+                    map.setPaintProperty('layer-geo', 'fill-opacity', p * 0.6);
+                }
+
+                // --- 2. LÓGICA DE TEXTO (Tarjetas) ---
+                // Se activan según el tercio del recorrido (0-33%, 33-66%, 66-100%)
+                
+                cards.forEach(c => c.classList.remove('is-active'));
+
+                if (p < 0.33) {
+                    if(cards[0]) cards[0].classList.add('is-active');
+                } else if (p < 0.66) {
+                    if(cards[1]) cards[1].classList.add('is-active');
+                } else {
+                    if(cards[2]) cards[2].classList.add('is-active');
+                }
+            },
+            
+            // --- GESTIÓN DE LEYENDA ---
+            onEnter: () => {
+                const legend = document.getElementById('legend-step-21');
+                if(legend) legend.style.opacity = '1';
+            },
+            
+            // Se queda visible para que el usuario pueda consultarla al terminar.
+            onLeave: () => {
+                // Si queremos que otra capa desaparezca al terminar, descomentar esto:
+                // if (map.getLayer('layer-geo')) map.setPaintProperty('layer-geo', 'fill-opacity', 0);
+            },
+
+            // Al regresar hacia arriba, ocultamos la leyenda
+            onLeaveBack: () => {
+                if (map.getLayer('layer-geo')) map.setPaintProperty('layer-geo', 'fill-opacity', 0);
+                if (map.getLayer('layer-cambio-poblacional')) map.setPaintProperty('layer-cambio-poblacional', 'fill-opacity', 0);
+
+                const legend = document.getElementById('legend-step-21');
+                if(legend) legend.style.opacity = '0';
+            }
+        });
     }
 }

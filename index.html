@@ -406,6 +406,39 @@
                     </div>
                 </div>
 
+                <!-- STEP 20: 2000–2010–2020 -->
+                <div class="step text-step" data-step="20">
+                    <div class="step-content">
+                        <h2>2000–2010–2020: la huella en el verde</h2>
+                        <p>La secuencia <strong>2000 → 2010 → 2020</strong> permite observar la pérdida de cobertura forestal como un proceso acumulativo. No se trata solo de “menos verde”: implica fragmentación ecológica, presión sobre servicios ambientales, impactos en temperatura, agua y resiliencia. Leída junto a la expansión urbana, la lección es clara: la forma de crecer importa tanto como el crecimiento mismo. Esta evidencia abre una oportunidad: orientar la ciudad hacia la consolidación, la eficiencia territorial y una infraestructura verde más estratégica.</p>
+                    </div>
+                </div>   
+                
+                <!-- STEP 21: 2010–2020 y 2025 -->
+                <div class="step breakout-step" data-step="21" id="step-map-compare">
+                    <div class="sticky-track" style="height: 500vh;"> <div class="sticky-item transparent-bg">
+                            
+                            <div class="story-overlay-container">
+                                
+                                <div class="story-card card-1 is-active">
+                                    <p class="story-title">2010–2020 y 2025: el giro reciente y el futuro inmediato</p>
+                                    <p>Entre 2010 y 2020, las áreas centrales del municipio registran caídas acumuladas superiores al <strong>10%</strong>, mientras zonas periféricas crecen en rangos promedio de <strong>20–30%</strong> aunque hay zonas que crecen hasta un <strong>XX%</strong>.</p>
+                                </div>
+
+                                <div class="story-card card-2">
+                                    <p>Este patrón sugiere una ciudad que se dispersa: más superficie urbanizada para sostener menos vida cerca del centro. La proyección refuerza la dimensión del reto: una huella urbana 2025 de aproximadamente <strong>18,702</strong> ha y un crecimiento acumulado de aproximadamente <strong>280%</strong> desde 1980.</p>
+                                </div>
+
+                                <div class="story-card card-3">
+                                    <p>La buena noticia es que esta lectura permite actuar: revitalizar centralidades, mejorar movilidad y servicios, y contener expansión con una ciudad más compacta, conectada y verde.</p>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>       
+
 
                 
                 
@@ -420,6 +453,21 @@
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
     <script src="https://unpkg.com/scrollama"></script>
     <script src="main.js"></script>
+
+    <div id="legend-step-21" class="map-legend" style="opacity: 0; pointer-events: none;">
+        <h4>Cambio Poblacional (2010-2020)</h4>
+        <div class="legend-scale">
+            <div class="legend-item"><span style="background: #f7fcf5; border: 1px solid #ccc;"></span>≤ -75% (Pérdida muy intensa)</div>
+            <div class="legend-item"><span style="background: #e5f5e0;"></span>-75% a -50% (Pérdida fuerte)</div>
+            <div class="legend-item"><span style="background: #c7e9c0;"></span>-50% a -25% (Pérdida moderada)</div>
+            <div class="legend-item"><span style="background: #a1d99b;"></span>-25% a 0% (Estancamiento)</div>
+            <div class="legend-item"><span style="background: #74c476;"></span>0% a 25% (Crecimiento ligero)</div>
+            <div class="legend-item"><span style="background: #41ab5d;"></span>25% a 50% (Crecimiento moderado)</div>
+            <div class="legend-item"><span style="background: #238b45;"></span>50% a 75% (Crecimiento fuerte)</div>
+            <div class="legend-item"><span style="background: #006d2c;"></span>75% a 100% (Muy fuerte)</div>
+            <div class="legend-item"><span style="background: #00441b;"></span>≥ 100% (Expansión acelerada)</div>
+        </div>
+    </div>
 
 </body>
 </html>
