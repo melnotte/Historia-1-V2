@@ -177,17 +177,12 @@ function handleStepEnter(response) {
             // Step 17: TEXTO 1970-1980
             switchGlobalLayer('none');
             break;
-
         // El usuario scrollea por la sección de puntos. Scrollama espera hasta el 18.
-
-        case '18':
-            // Step 18: EL RETORNO AL MAPA (1980)
+       case '18':
             switchGlobalLayer('map');
             map.flyTo({ 
                 center: [-86.8475, 21.1619],
-                zoom: 11, 
-                pitch: 0,
-                speed: 1.2
+                zoom: 11, pitch: 0, speed: 1.2
             }); 
             break;
         case '19':
@@ -509,6 +504,7 @@ function handleStepProgress(response)
             }
         }
     }
+
     // LÓGICA STEP 19: Texto subiendo (Scroll vertical)
     if (step === '19') {
         const textContent = element.querySelector('.sliding-content');
@@ -578,13 +574,23 @@ function init() {
 // Arrancar
 init();
 
-// VISUALIZACIÓN DE PUNTOS CON GSAP + SCROLLTRIGGER
+// ======================================================
+// ZONA GSAP (Puntos + Step 18 Expansión)
+// ======================================================
+
 if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    
+    // 1. REGISTRO ÚNICO DEL PLUGIN
     gsap.registerPlugin(ScrollTrigger);
+
+    // ------------------------------------------------------
+    // A. LÓGICA DE PUNTOS
+    // ------------------------------------------------------
     const contenedor = document.getElementById('visualizacion-puntos');
     const contador = document.getElementById('contador-puntos');
     const overlay = document.querySelector('.overlay-circle');
     const PERSONS_PER_DOT = 1000;
+
     if (contenedor) {
         ScrollTrigger.create({
             trigger: document.querySelector('.layout-dots'),
@@ -593,9 +599,11 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
             pin: contenedor,
             pinSpacing: true
         });
-        // Calcular total requerido desde las secciones (para asegurar exactitud)
+
         const sections = document.querySelectorAll('#narrativa-dots .narrativa');
         const total = Array.from(sections).reduce((acc, el) => acc + parseInt(el.dataset.dots || '0', 10), 0);
+        
+        // Creación de puntos DOM
         const puntos = [];
         for (let i = 0; i < total; i++) {
             const d = document.createElement('div');
@@ -603,11 +611,14 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
             contenedor.appendChild(d);
             puntos.push(d);
         }
+
+        // Variables de datos
         let offset = 0;
         const hudYear = document.getElementById('hud-year');
         const percentageDisplay = document.getElementById('percentage-display');
-        const counts = Array.from(sections).map(sec => parseInt(sec.dataset.dots || '0', 10));
         const personsByDecade = [6867, 37190, 176765, 419815, 659311, 911503];
+        
+        // Cálculos de grilla
         const cw = contenedor.clientWidth;
         const ch = contenedor.clientHeight;
         const colsTotal = Math.ceil(Math.sqrt(total * cw / ch));
@@ -616,6 +627,8 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
         const cellHTotal = ch / rowsTotal;
         const DOT_SIZE = 10;
         const finalScale = Math.min(cellWTotal, cellHTotal) / DOT_SIZE * 0.75;
+
+        // Posicionamiento inicial
         for (let i = 0; i < total; i++) {
             const c = i % colsTotal;
             const r = Math.floor(i / colsTotal);
@@ -623,6 +636,8 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
             const y = Math.round((r + 0.5) * cellHTotal - ch / 2);
             gsap.set(puntos[i], { x, y });
         }
+
+        // Orden de llenado
         const order = [];
         for (let c = 0; c < colsTotal; c++) {
             for (let r = rowsTotal - 1; r >= 0; r--) {
@@ -630,7 +645,10 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
                 if (idx < total) order.push(idx);
             }
         }
+
         const palette = ['#780000','#C1121F','#FDF0D5','#003049','#669BBC'];
+
+        // Loop de animaciones por sección
         sections.forEach((seccion, index) => {
             const cantidad = parseInt(seccion.dataset.dots || '0', 10);
             const subset = order.slice(offset, offset + cantidad).map(i => puntos[i]);
@@ -638,6 +656,7 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
             const endScale = index === 0 ? 0.85 : 1.15;
             const color = palette[index] ?? palette[index % palette.length];
             const isLast = index === sections.length - 1;
+
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: seccion,
@@ -653,9 +672,10 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
                     onEnterBack: () => { if (hudYear) { const h = seccion.querySelector('h2'); hudYear.textContent = h ? h.textContent : String(1970 + index*10); } }
                 }
             });
-            tl.to(subset, { opacity: 1, scale: finalScale, backgroundColor: color, duration: 1,
-                stagger: { each: 0.004 }, ease: 'none' }, 0);
+
+            tl.to(subset, { opacity: 1, scale: finalScale, backgroundColor: color, duration: 1, stagger: { each: 0.004 }, ease: 'none' }, 0);
             tl.fromTo(overlay, { scale: startScale }, { scale: endScale, duration: 1, ease: 'none' }, 0);
+            
             tl.eventCallback('onUpdate', () => {
                 const p = tl.progress();
                 const targetPersonsExact = personsByDecade[index] || (cantidad * PERSONS_PER_DOT);
@@ -670,6 +690,8 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
             });
             offset += cantidad;
         });
+
+        // Resize Listener para Puntos
         window.addEventListener('resize', () => {
             const cw2 = contenedor.clientWidth;
             const ch2 = contenedor.clientHeight;
@@ -686,5 +708,72 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
             }
             ScrollTrigger.refresh();
         });
+    }
+
+    // ------------------------------------------------------
+    // B. LÓGICA DE EXPANSIÓN (Step 18 - Secuencial)
+    // ------------------------------------------------------
+    const stepExpansion = document.querySelector("#step-expansion");
+
+    if (stepExpansion) {
+        const tlExpansion = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#step-expansion",
+                start: "top top",
+                end: "+=3500",                
+                pin: true,
+                scrub: 1,
+                anticipatePin: 1
+            }
+        });
+
+        // FASE 1: Lectura del primer texto
+        tlExpansion.addLabel("start")
+            .to({}, { duration: 0.5 });
+
+        // FASE 2: Salida Texto 1 y Entrada Imágenes
+        const images = document.querySelectorAll('.exp-img');
+        
+        // El texto 1 desaparece
+        tlExpansion.to('.text-layer', { opacity: 0, duration: 2 }, "change");
+
+        // Las imágenes aparecen
+        tlExpansion.to(images, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 5,
+            stagger: 0.3,
+            ease: "power2.out"
+        }, "change");
+
+        // FASE 3: Hold
+        tlExpansion.to({}, { duration: 2 });
+
+        // FASE 4: Entrada Texto 2
+        tlExpansion.to('.expansion-gallery', { 
+            opacity: 0.3, 
+            filter: "blur(5px)", 
+            duration: 2 
+        }, "text2");
+
+        tlExpansion.to('.final-text-layer', { 
+            opacity: 1, 
+            duration: 2 
+        }, "text2");
+
+        // FASE 5: Breve pausa de lectura
+        tlExpansion.to({}, { duration: 1 });
+
+        // FASE 6: SALIDA (Fade Out)
+        // Hacemos que el texto desaparezca antes de desbloquear la pantalla
+        tlExpansion.to('.final-text-layer', { 
+            opacity: 0, 
+            y: -20, // Efecto de "irse hacia arriba" sutil
+            duration: 1 
+        });
+        
+        tlExpansion.to('.expansion-gallery', { opacity: 0.1, duration: 1 }, "<");
+
     }
 }
