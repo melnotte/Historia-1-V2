@@ -747,7 +747,13 @@ p { line-height: 1.6; font-size: 1.1rem; }
 }
 
 /* --- ESTILOS SECCIÓN DE CRECIMIENTO COMO PUNTOS --- */
-.layout-dots { display: flex; align-items: stretch; }
+.layout-dots {
+    display: flex;        
+    align-items: stretch;
+    position: relative;
+    z-index: 20; 
+    background-color: #fff; 
+}
 #visualizacion-puntos {
     position: relative;
     width: 50vw;
@@ -763,7 +769,12 @@ p { line-height: 1.6; font-size: 1.1rem; }
 #contador-puntos { font-weight: 800; font-size: clamp(1.5rem, 3.5vw, 3rem); color: #023047; background: rgba(255,255,255,0.9); padding: 6px 10px; border-radius: 6px; }
 #percentage-display { font-weight: 700; font-size: clamp(1rem, 2.5vw, 2rem); color: #fb923c; background: rgba(255,255,255,0.9); padding: 4px 8px; border-radius: 6px; }
 .overlay-circle { position: absolute; left: 50%; top: 50%; width: 150vmax; height: 150vmax; border-radius: 50%; background: radial-gradient(circle at center, rgba(2,48,71,0.15), rgba(2,48,71,0)); transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
-#narrativa-dots { width: 50vw; }
+#narrativa-dots {
+    width: 50vw;
+    background-color: #f4f4f4;
+    position: relative;
+    z-index: 20;
+}
 .narrativa { padding: 10vh 8vw; min-height: 120vh; border-bottom: 1px solid #f0f0f0; }
 .narrativa h2 { margin: 0 0 1rem 0; color: #023047; font-weight: 600; }
 .narrativa p { line-height: 1.6; font-size: 1rem; }
