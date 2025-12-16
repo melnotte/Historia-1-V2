@@ -860,61 +860,71 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
             scrollTrigger: {
                 trigger: "#step-expansion",
                 start: "top top",
-                end: "+=3500",                
+                end: "+=4000", 
                 pin: true,
                 scrub: 1,
                 anticipatePin: 1
             }
         });
 
-        // FASE 1: Lectura del primer texto
-        tlExpansion.addLabel("start")
-            .to({}, { duration: 0.5 });
-
-        // FASE 2: Salida Texto 1 y Entrada Imágenes
-        const images = document.querySelectorAll('.exp-img');
+        // --- FASE 1: Lectura inicial ---
+        tlExpansion.addLabel("start");
         
-        // El texto 1 desaparece
-        tlExpansion.to('.text-layer', { opacity: 0, duration: 2 }, "change");
+        // --- FASE 2: Transición Texto -> Imágenes ---
+        // 1. Desaparece el texto introductorio
+        tlExpansion.to('#step-expansion .text-layer', { 
+            opacity: 0, 
+            y: -20,
+            duration: 2,
+            pointerEvents: "none"
+        }, "change");
 
-        // Las imágenes aparecen
+        // 2. Aparecen las imágenes
+        const images = document.querySelectorAll('.exp-img');
         tlExpansion.to(images, {
             opacity: 1,
             y: 0,
             scale: 1,
             duration: 5,
-            stagger: 0.3,
-            ease: "power2.out"
-        }, "change");
+            stagger: 0.4,
+            ease: "back.out(1.2)"
+        }, "change+=0.5");
 
-        // FASE 3: Hold
-        tlExpansion.to({}, { duration: 2 });
+        // --- FASE 3: Imágenes ---
+        tlExpansion.to({}, { duration: 4 });
 
-        // FASE 4: Entrada Texto 2
-        tlExpansion.to('.expansion-gallery', { 
-            opacity: 0.3, 
-            filter: "blur(5px)", 
-            duration: 2 
-        }, "text2");
-
-        tlExpansion.to('.final-text-layer', { 
-            opacity: 1, 
-            duration: 2 
-        }, "text2");
-
-        // FASE 5: Breve pausa de lectura
-        tlExpansion.to({}, { duration: 1 });
-
-        // FASE 6: SALIDA (Fade Out)
-        // Hacemos que el texto desaparezca antes de desbloquear la pantalla
-        tlExpansion.to('.final-text-layer', { 
-            opacity: 0, 
-            y: -20, // Efecto de "irse hacia arriba" sutil
-            duration: 1 
-        });
+        // --- FASE 4: Entrada Texto Final ---
+        tlExpansion.addLabel("text2");
         
-        tlExpansion.to('.expansion-gallery', { opacity: 0.1, duration: 1 }, "<");
+        // Desenfocamos la galería para dar foco al texto final
+        tlExpansion.to('.expansion-gallery', { 
+            opacity: 0.4, 
+            filter: "blur(4px)", 
+            scale: 0.98,
+            duration: 3 
+        }, "text2");
 
+        // Aparece el texto de cierre
+        tlExpansion.to('#step-expansion .final-text-layer', { 
+            opacity: 1, 
+            y: 0, 
+            duration: 3 
+        }, "text2");
+
+        // --- FASE 5: Lectura final ---
+        tlExpansion.to({}, { duration: 4 });
+
+        // --- FASE 6: Salida total ---
+        tlExpansion.to('#step-expansion .final-text-layer', { 
+            opacity: 0,
+            y: -20,
+            duration: 2 
+        }, "exit");
+        
+        tlExpansion.to('.expansion-gallery', { 
+            opacity: 0, 
+            duration: 2 
+        }, "exit");
     }
 
     // ------------------------------------------------------
