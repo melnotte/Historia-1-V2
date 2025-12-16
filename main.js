@@ -732,6 +732,8 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     const PERSONS_PER_DOT = 1000;
 
     if (contenedor) {
+        // COMENTADO: Ya no necesitamos pin por JS porque usamos CSS sticky + Grid overlap
+        /*
         ScrollTrigger.create({
             trigger: document.querySelector('.layout-dots'),
             start: 'top top',
@@ -739,6 +741,7 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
             pin: contenedor,
             pinSpacing: true
         });
+        */
 
         const sections = document.querySelectorAll('#narrativa-dots .narrativa');
         const total = Array.from(sections).reduce((acc, el) => acc + parseInt(el.dataset.dots || '0', 10), 0);
