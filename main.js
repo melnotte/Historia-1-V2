@@ -324,18 +324,34 @@ function handleStepEnter(response) {
                 pitch: 0 
             });
 
-            // Aseguramos que la capa base sea visible desde el inicio del paso
+            // Asegura que la capa base sea visible
             if (map.getLayer('layer-cambio-poblacional')) {
                 map.setPaintProperty('layer-cambio-poblacional', 'fill-opacity', 0.85);
             }
-            // La capa overlay empieza invisible (GSAP se encargará)
+            // La capa overlay empieza invisible
             if (map.getLayer('layer-geo')) {
                 map.setPaintProperty('layer-geo', 'fill-opacity', 0);
             }
+
+            // Si venimos de abajo (del step 22), apagamos el azul
+            const closingLayer21 = document.getElementById('closing-layer');
+            if (closingLayer21) closingLayer21.style.opacity = '0';
+            
+            // Reinicio de la leyenda
+            const legend21 = document.getElementById('legend-step-21');
+            if (legend21) legend21.style.opacity = '1';
+
+            break;
+
+        case '22':
+            switchGlobalLayer('map');
             break;
         default:
             isStep9Active = false;
             switchGlobalLayer('none');
+            if (document.getElementById('closing-layer')) {
+                document.getElementById('closing-layer').style.opacity = '0';
+            }
     }
 }
 
@@ -666,6 +682,23 @@ function handleStepProgress(response)
                 textContent.style.opacity = progress * 10;
             } else {
                 textContent.style.opacity = 1;
+            }
+        }
+    }
+    //LÓGICA STEP 22: CIERRE
+    if (step === '22') {
+        const closingLayer = document.getElementById('closing-layer');
+        const legend = document.getElementById('legend-step-21');
+        
+        if (closingLayer) {
+            let opacityVal = normalize(progress, 0, 0.5); 
+            
+            if (opacityVal > 1) opacityVal = 1;
+            closingLayer.style.opacity = opacityVal;
+
+            // La leyenda desaparece
+            if (legend) {
+                legend.style.opacity = Math.max(0, 1 - (progress * 10));
             }
         }
     }
