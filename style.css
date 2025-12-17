@@ -747,42 +747,144 @@ p { line-height: 1.6; font-size: 1.1rem; }
 }
 
 /* --- ESTILOS SECCIÓN DE CRECIMIENTO COMO PUNTOS --- */
-.layout-dots {
-    display: flex;        
-    align-items: stretch;
+.layout-dots { 
+    display: grid; 
+    grid-template-columns: 100%;
     position: relative;
-    z-index: 20; 
-    background-color: #fff; 
 }
+
 #visualizacion-puntos {
-    position: relative;
-    width: 50vw;
+    grid-column: 1;
+    grid-row: 1;
+    position: sticky;
+    top: 0;
+    width: 100%;
     height: 100vh;
     overflow: hidden;
     padding: 16px;
     box-sizing: border-box;
     background: #ffffff;
-    border-right: 1px solid #e6e6e6;
+    border-right: none;
+    z-index: 1;
 }
-.hud { position: absolute; right: 16px; left: auto; top: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 50; align-items: flex-end; }
-#hud-year { font-weight: 800; font-size: clamp(2rem, 5vw, 4rem); color: rgba(2,48,71,0.2); line-height: 1; }
-#contador-puntos { font-weight: 800; font-size: clamp(1.5rem, 3.5vw, 3rem); color: #023047; background: rgba(255,255,255,0.9); padding: 6px 10px; border-radius: 6px; }
-#percentage-display { font-weight: 700; font-size: clamp(1rem, 2.5vw, 2rem); color: #fb923c; background: rgba(255,255,255,0.9); padding: 4px 8px; border-radius: 6px; }
-.overlay-circle { position: absolute; left: 50%; top: 50%; width: 150vmax; height: 150vmax; border-radius: 50%; background: radial-gradient(circle at center, rgba(2,48,71,0.15), rgba(2,48,71,0)); transform: translate(-50%, -50%) scale(0.6); pointer-events: none; }
-#narrativa-dots {
-    width: 50vw;
-    background-color: #f4f4f4;
-    position: relative;
-    z-index: 20;
+
+/* Ajustamos el HUD para que se vea bien en full width */
+.hud { 
+    position: absolute; 
+    right: 32px; 
+    left: auto; 
+    bottom: 32px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    z-index: 50; 
+    align-items: flex-end; 
 }
-.narrativa { padding: 10vh 8vw; min-height: 120vh; border-bottom: 1px solid #f0f0f0; }
-.narrativa h2 { margin: 0 0 1rem 0; color: #023047; font-weight: 600; }
-.narrativa p { line-height: 1.6; font-size: 1rem; }
-.punto { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; border-radius: 50%; background: #023047; opacity: 0; transform: translate(-50%, -50%) scale(0.5); will-change: transform, opacity; }
+
+#hud-year { 
+    position: absolute; 
+    right: 32px; 
+    left: auto; 
+    top: 32px; 
+    font-weight: 800; 
+    font-size: clamp(3rem, 8vw, 6rem);
+    color: rgba(2,48,71,0.15); 
+    line-height: 1; 
+}
+
+#contador-puntos { 
+    font-weight: 800; 
+    font-size: clamp(1.5rem, 3.5vw, 3rem); 
+    color: #023047; 
+    background: rgba(255,255,255,0.9); 
+    padding: 6px 10px; 
+    border-radius: 6px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#percentage-display { 
+    font-weight: 700; 
+    font-size: clamp(1rem, 2.5vw, 2rem); 
+    color: #fb923c; 
+    background: rgba(255,255,255,0.9); 
+    padding: 4px 8px; 
+    border-radius: 6px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.overlay-circle { 
+    position: absolute; 
+    left: 50%; 
+    top: 50%; 
+    width: 150vmax; 
+    height: 150vmax; 
+    border-radius: 50%; 
+    background: radial-gradient(circle at center, rgba(2,48,71,0.15), rgba(2,48,71,0)); 
+    transform: translate(-50%, -50%) scale(0.6); 
+    pointer-events: none; 
+}
+
+#narrativa-dots { 
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.narrativa { 
+    padding: 10vh 5vw; 
+    min-height: 100vh; 
+    border-bottom: none; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* Tarjetas de texto flotante */
+.narrativa-card {
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    max-width: 450px;
+    backdrop-filter: blur(5px);
+}
+
+.narrativa h2 { 
+    margin: 0 0 1rem 0; 
+    color: #023047; 
+    font-weight: 700; 
+    font-size: 2rem;
+}
+
+.narrativa p { 
+    line-height: 1.6; 
+    font-size: 1.1rem; 
+    margin: 0;
+}
+
+.punto { 
+    position: absolute; 
+    left: 50%; 
+    top: 50%; 
+    width: 10px; 
+    height: 10px; 
+    border-radius: 50%; 
+    background: #023047; 
+    opacity: 0; 
+    transform: translate(-50%, -50%) scale(0.5); 
+    will-change: transform, opacity; 
+}
+
 @media (max-width: 768px) {
-    .layout-dots { flex-direction: column; }
-    #visualizacion-puntos { width: 100vw; height: 70vh; padding: 12px; }
-    #narrativa-dots { width: 100vw; }
+    .layout-dots { display: block; }
+    #visualizacion-puntos { position: sticky; height: 100vh; top: 0; }
+    #narrativa-dots { position: relative; }
+    .narrativa { align-items: center; justify-content: flex-end; padding-bottom: 20vh; }
+    .narrativa-card { width: 90%; text-align: center; }
 }
 
 /* --- ESTILOS PARA EL SEGUNDO ARTICLE --- */

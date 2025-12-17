@@ -765,14 +765,7 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     const PERSONS_PER_DOT = 1000;
 
     if (contenedor) {
-        ScrollTrigger.create({
-            trigger: document.querySelector('.layout-dots'),
-            start: 'top top',
-            end: 'bottom bottom',
-            pin: contenedor,
-            pinSpacing: true
-        });
-
+        
         const sections = document.querySelectorAll('#narrativa-dots .narrativa');
         const total = Array.from(sections).reduce((acc, el) => acc + parseInt(el.dataset.dots || '0', 10), 0);
         
