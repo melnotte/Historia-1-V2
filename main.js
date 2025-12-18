@@ -886,71 +886,50 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
             scrollTrigger: {
                 trigger: "#step-expansion",
                 start: "top top",
-                end: "+=4000", 
+                end: "+=6000",
                 pin: true,
-                scrub: 1,
-                anticipatePin: 1
+                scrub: 1
             }
         });
 
-        // --- FASE 1: Lectura inicial ---
-        tlExpansion.addLabel("start");
-        
-        // --- FASE 2: Transición Texto -> Imágenes ---
-        // 1. Desaparece el texto introductorio
+        // 1. Desaparece texto inicial
         tlExpansion.to('#step-expansion .text-layer', { 
             opacity: 0, 
-            y: -20,
-            duration: 2,
-            pointerEvents: "none"
-        }, "change");
-
-        // 2. Aparecen las imágenes
-        const images = document.querySelectorAll('.exp-img');
-        tlExpansion.to(images, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 5,
-            stagger: 0.4,
-            ease: "back.out(1.2)"
-        }, "change+=0.5");
-
-        // --- FASE 3: Imágenes ---
-        tlExpansion.to({}, { duration: 4 });
-
-        // --- FASE 4: Entrada Texto Final ---
-        tlExpansion.addLabel("text2");
-        
-        // Desenfocamos la galería para dar foco al texto final
-        tlExpansion.to('.expansion-gallery', { 
-            opacity: 0.4, 
-            filter: "blur(4px)", 
-            scale: 0.98,
+            y: -40, 
             duration: 3 
-        }, "text2");
+        });
 
-        // Aparece el texto de cierre
+        // 2. Aparecen imágenes una por una
+        const expImgIds = ['#exp-84', '#exp-90', '#exp-00', '#exp-10', '#exp-20'];
+        expImgIds.forEach((id) => {
+            tlExpansion.to(id, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 4,
+                ease: "power2.out"
+            }, "+=0.2"); // El scroll activa cada una secuencialmente
+        });
+
+        // 3. Espacio de observación (scroll vacío)
+        tlExpansion.to({}, { duration: 2 });
+
+        // 4. Transición a texto final
+        tlExpansion.to('.expansion-gallery', { 
+            opacity: 0.2, 
+            filter: "blur(4px)", 
+            duration: 3 
+        }, "final");
+
         tlExpansion.to('#step-expansion .final-text-layer', { 
             opacity: 1, 
             y: 0, 
-            duration: 3 
-        }, "text2");
+            duration: 4,
+            onStart: () => gsap.set('#step-expansion .final-text-layer', { pointerEvents: "auto" })
+        }, "final");
 
-        // --- FASE 5: Lectura final ---
-        tlExpansion.to({}, { duration: 4 });
-
-        // --- FASE 6: Salida total ---
-        tlExpansion.to('#step-expansion .final-text-layer', { 
-            opacity: 0,
-            y: -20,
-            duration: 2 
-        }, "exit");
-        
-        tlExpansion.to('.expansion-gallery', { 
-            opacity: 0, 
-            duration: 2 
-        }, "exit");
+        // 5. Salida del paso
+        tlExpansion.to('#step-expansion .step-content', { opacity: 0, duration: 4 }, "+=4");
     }
 
     // ------------------------------------------------------
