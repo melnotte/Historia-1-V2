@@ -383,53 +383,71 @@ function handleStepProgress(response)
         const lines = element.querySelectorAll('.hl-line');
 
         if (wrapper) {
-            // --- 1. ZOOM Y PANEO (0% a 60% del scroll) ---
+            const width = window.innerWidth;
             
-            // Escala 0.33 para que la imagen de 300vh quepa en pantalla al inicio
-            const startScale = 0.33; 
-            const endScale = 1; 
-            
-            // Para centrar más arriba o abajo el párrafo
-            const startPanY = 0; 
-            const endPanY = -32; 
+            // 1. DETECCIÓN DE DISPOSITIVO
+            const isMobile = width < 768;
+            const isTablet = width >= 768 && width < 1024;
 
-            // Calculamos movimiento
-            const moveProgress = normalize(progress, 0.0, 0.60);
+            // 2. CONFIGURACIÓN DE MOVIMIENTO
+            // ---------------------------------------------
+            
+            // ESCALA (ZOOM):
+            const startScale = isMobile ? 0.18 : 0.33; 
+            
+            let endScale = 1; 
+            if (isMobile) endScale = 0.42;
+            else if (isTablet) endScale = 0.65;
+
+            // PANEO VERTICAL (Y):
+            let endPanY = -32; 
+            if (isMobile) endPanY = -10;
+            else if (isTablet) endPanY = -18;
+
+            // PANEO HORIZONTAL (X):
+            // Desktop: 0 (Centrado)
+            // Tablet: 15 (Empuje medio)
+            // Móvil: 8 (Empuje sutil)
+            let endPanX = 0; 
+            
+            if (isMobile) {
+                endPanX = 8;
+            } else if (isTablet) {
+                endPanX = 15; 
+            }
+
+            // 3. TIMELINE
+            // ---------------------------------------------
+
+            // FASE 1: MOVIMIENTO (0% - 40%)
+            const moveProgress = normalize(progress, 0.0, 0.40);
             
             const currentScale = startScale + (moveProgress * (endScale - startScale));
-            const currentPanY = startPanY + (moveProgress * (endPanY - startPanY));
+            const currentPanY = (moveProgress * endPanY); 
+            const currentPanX = (moveProgress * endPanX); 
             
-            wrapper.style.transform = `translate3d(0, ${currentPanY}%, 0) scale(${currentScale})`;
+            wrapper.style.transform = `translate3d(${currentPanX}%, ${currentPanY}%, 0) scale(${currentScale})`;
 
-            // --- 2. SECUENCIA DE SUBRAYADO (60% a 85% del scroll) ---
-            // "Dibujamos" las líneas una por una usando el scroll
-            
-            const drawStart = 0.60;
-            const drawEnd = 0.85;
-            
-            // 0 a 1 dentro de la fase de dibujo
-            const drawProgress = normalize(progress, drawStart, drawEnd);
-
+            // FASE 2: SUBRAYADO (40% - 70%)
+            const drawProgress = normalize(progress, 0.40, 0.70);
             if (lines.length > 0) {
                 const totalLines = lines.length;
-                
                 lines.forEach((line, index) => {
-                    // Cada línea tiene su propio "mini-tramo" dentro del progreso total
                     const lineStart = index / totalLines;
                     const lineEnd = (index + 1) / totalLines;
-                    
-                    // Calculamos qué tanto se debe mostrar ESTA línea
                     let lineScale = normalize(drawProgress, lineStart, lineEnd);
-                    
                     line.style.transform = `scaleX(${lineScale})`;
                 });
             }
 
-            // --- 3. CAPTION (85% a 95%) ---
-            const captionProgress = normalize(progress, 0.85, 0.95);
+            // FASE 3: CAPTION (70% - 85%)
+            const captionProgress = normalize(progress, 0.70, 0.85);
             if (caption) {
                 caption.style.opacity = captionProgress;
+                caption.style.transform = `translateX(-50%) translateY(${20 - (captionProgress * 20)}px)`;
             }
+            
+            // FASE 4: FREEZE (85% - 100%)
         }
     }
 
