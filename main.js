@@ -153,6 +153,14 @@ const scroller = scrollama();
 function handleStepEnter(response) {
     const { element } = response;
     const step = element.dataset.step;
+    const legend21 = document.getElementById('legend-step-21');
+
+    if (step !== '21') {
+        if (legend21) {
+            legend21.style.opacity = '0';
+            legend21.style.pointerEvents = 'none';
+        }
+    }
 
     // Activar estilo visual del texto
     document.querySelectorAll('.step').forEach(s => s.classList.remove('is-active'));
@@ -164,6 +172,21 @@ function handleStepEnter(response) {
             switchGlobalLayer('video');
             const vid = document.getElementById('hero-video');
             if(vid) vid.play().catch(()=>{});
+
+            const legendForce = document.getElementById('legend-step-21');
+            if (legendForce) {
+                legendForce.style.opacity = '0';
+                legendForce.style.pointerEvents = 'none';
+                legendForce.style.transition = 'none'; 
+                
+                setTimeout(() => {
+                    legendForce.style.transition = 'opacity 0.5s ease';
+                }, 100);
+            }
+
+            if (map.getLayer('layer-cambio-poblacional')) {
+                map.setPaintProperty('layer-cambio-poblacional', 'fill-opacity', 0);
+            }
             break;
 
         case '2':
@@ -324,23 +347,21 @@ function handleStepEnter(response) {
                 pitch: 0 
             });
 
-            // Asegura que la capa base sea visible
             if (map.getLayer('layer-cambio-poblacional')) {
                 map.setPaintProperty('layer-cambio-poblacional', 'fill-opacity', 0.85);
             }
-            // La capa overlay empieza invisible
             if (map.getLayer('layer-geo')) {
                 map.setPaintProperty('layer-geo', 'fill-opacity', 0);
             }
 
-            // Si venimos de abajo (del step 22), apagamos el azul
             const closingLayer21 = document.getElementById('closing-layer');
             if (closingLayer21) closingLayer21.style.opacity = '0';
             
-            // Reinicio de la leyenda
-            const legend21 = document.getElementById('legend-step-21');
-            if (legend21) legend21.style.opacity = '1';
-
+            // ENCENDER LEYENDA
+            if (legend21) {
+                legend21.style.opacity = '1';
+                legend21.style.pointerEvents = 'auto';
+            }
             break;
 
         case '22':
@@ -349,6 +370,7 @@ function handleStepEnter(response) {
         default:
             isStep9Active = false;
             switchGlobalLayer('none');
+
             if (document.getElementById('closing-layer')) {
                 document.getElementById('closing-layer').style.opacity = '0';
             }
@@ -760,6 +782,7 @@ function init() {
         .onStepProgress(handleStepProgress); // <--- Conectamos la función de progreso
         
     window.addEventListener('resize', scroller.resize);
+
 }
 
 // Arrancar
@@ -1015,4 +1038,63 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
             }
         });
     }
+
+    /// ========================================================
+    // 4. UI: BOTÓN VOLVER AL INICIO
+    // ========================================================
+
+    const backToTopBtn = document.getElementById('back-to-top');
+    const legendStep21 = document.getElementById('legend-step-21'); 
+
+    if (backToTopBtn) {
+        ScrollTrigger.create({
+            trigger: '.site-footer',
+            start: "top bottom", // Cuando el tope del footer entra en la pantalla
+            end: "bottom bottom",
+            toggleActions: "play none none reverse",
+
+            onEnter: () => {
+                backToTopBtn.classList.add('is-visible');
+            },
+            onLeaveBack: () => {
+                backToTopBtn.classList.remove('is-visible');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            backToTopBtn.classList.remove('is-visible');
+
+            if (legendStep21) {
+                legendStep21.style.transition = 'none';
+                legendStep21.style.opacity = '0';
+                legendStep21.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    legendStep21.style.transition = 'opacity 0.5s ease';
+                }, 500);
+            }
+
+            // Limpieza de capas del mapa
+            if (typeof map !== 'undefined' && map.getStyle()) { 
+                if (map.getLayer('layer-geo')) map.setPaintProperty('layer-geo', 'fill-opacity', 0);
+                if (map.getLayer('layer-cambio-poblacional')) map.setPaintProperty('layer-cambio-poblacional', 'fill-opacity', 0);
+            }
+
+            window.scrollTo({ top: 0, behavior: 'auto' });
+            if(typeof isStep9Active !== 'undefined') isStep9Active = false;
+        });
+    }
+
+    // ========================================================
+    // 5. REFRESH FINAL DE SINCRONIZACIÓN
+    // ========================================================
+    setTimeout(() => {
+        // 1. GSAP recalcula sus pines
+        ScrollTrigger.refresh();
+        
+        // 2. Le decimos a Scrollama que mida la página de nuevo
+        // porque GSAP cambió la altura total.
+        scroller.resize(); 
+    }, 1000);
 }

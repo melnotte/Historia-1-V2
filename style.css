@@ -1,10 +1,31 @@
+:root {
+    /* --- PALETA DE COLORES GLOBAL --- */
+    
+    /* Base */
+    --color-bg-light: #f4f4f4;       /* Fondo general */
+    --color-text-main: #333333;      /* Texto principal */
+    --color-white: #ffffff;
+    
+    /* Azules */
+    --color-blue-dark: #003049;      /* Footer, Marcos, Fondos oscuros */
+    --color-blue-deep: #023047;      /* Puntos mapa, Títulos overlay, Leyendas */
+    --color-blue-light: #669BBC;     /* Panel Resiliencia */
+    
+    /* Cálidos */
+    --color-red-main: #C1121F;       /* Botones, Highlights, Datos negativos */
+    --color-red-deep: #780000;       /* Fondo Población */
+    --color-sand: #FDF0D5;           /* Tarjeta Arena */
+    --color-yellow: #facc15;         /* Subrayados */
+    --color-orange: #fb923c;         /* Porcentajes */
+}
+
 /* --- RESET BÁSICO --- */
 body, html {
     margin: 0;
     padding: 0;
     font-family: 'Inter', sans-serif;
-    color: #333;
-    background-color: #f4f4f4;
+    color: var(--color-text-main);
+    background-color: var(--color-bg-light);
     width: 100%;
     /* IMPORTANTE: No usar overflow-x: hidden en body porque rompe sticky */
 }
@@ -88,7 +109,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
 .text-step {
     max-width: none; 
     width: 100%;
-    background-color: #f4f4f4;     
+    background-color: var(--color-bg-light);   
     position: relative;
     z-index: 10; 
     min-height: 100vh;
@@ -197,7 +218,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
     position: relative;
     width: 100%;
     height: 100vh;
-    background-color: #f4f4f4; 
+    background-color: var(--color-bg-light);
     overflow: hidden; 
     display: flex;
     align-items: center;
@@ -222,7 +243,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
 .hl-line {
     position: absolute;
     z-index: 2;
-    background-color: #facc15; /* Amarillo */
+    background-color: var(--color-yellow);
     mix-blend-mode: multiply;   /* Efecto tinta */
     opacity: 0.8;
     
@@ -267,8 +288,8 @@ p { line-height: 1.6; font-size: 1.1rem; }
 
 /* --- STEP 7: ESTILO SCRAPBOOK --- */
 .step[data-step="7"] .sticky-item {
-    background-color: #f4f4f4 !important;
-    color: #333;
+    background-color: var(--color-bg-light) !important;
+    color: var(--color-text-main);
 }
 
 .scrapbook-container {
@@ -289,7 +310,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
     height: auto;
     
     /* El borde y la sombra */
-    border: 15px solid #fff; 
+    border: 15px solid var(--color-white);
     box-shadow: 12px 12px 0px rgb(106, 79, 67); 
     
     /* Estado inicial */
@@ -306,7 +327,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
     max-width: 450px;
     
     background-color: rgba(0, 48, 73, 0.9);
-    color: #ffffff;
+    color: var(--color-white);
     
     padding: 2rem;
     border-radius: 8px;
@@ -368,8 +389,8 @@ p { line-height: 1.6; font-size: 1.1rem; }
     width: 90%;
     max-width: 450px;
     
-    background-color: #FDF0D5; 
-    color: #333333; 
+    background-color: var(--color-sand);
+    color: var(--color-text-main); 
     
     padding: 2rem;
     border-radius: 8px;
@@ -443,7 +464,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
     height: 40%;/* <--- Alto del recuadro */
     /* --------------------------- */
 
-    border: 3px solid #C1121F;
+    border: 3px solid var(--color-red-main);
     background-color: transparent;
     box-shadow: 0 0 0 2000px rgba(0,0,0,0.3); /* Efecto "Spotlight": oscurece el resto */
     
@@ -481,9 +502,8 @@ p { line-height: 1.6; font-size: 1.1rem; }
     width: 90%;
     max-width: 320px; /* Ancho máximo para que no sea muy largo */
     
-    /* Color #C1121F semitransparente (0.9 de opacidad) */
     background-color: rgba(193, 18, 31, 0.9); 
-    color: #ffffff; /* Texto blanco para contraste */
+    color: var(--color-white);
     
     padding: 1.5rem;
     border-radius: 8px;
@@ -525,7 +545,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
 
 /* 1. Contenedor Principal */
 .gallery-container {
-    background-color: #f4f4f4; 
+    background-color: var(--color-bg-light); 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -549,7 +569,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
 
 /* 3. El Marco Polaroid (MÓVIL / BASE) */
 .polaroid-frame {
-    background-color: #003049;
+    background-color: var(--color-blue-dark);
     padding: 1rem 1rem 3rem 1rem; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     position: relative;
@@ -637,7 +657,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
 .flash-overlay {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: #fff;
+    background-color: var(--color-white);
     opacity: 0;
     pointer-events: none;
     z-index: 20;
@@ -664,7 +684,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
 .pop-container {
     width: 100%;
     height: 100vh;
-    background-color: #780000; /* Fondo Rojo Vino */
+    background-color: var(--color-red-deep);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -692,13 +712,13 @@ p { line-height: 1.6; font-size: 1.1rem; }
     text-align: right; /* Alineamos todo a la derecha */
     opacity: 0; 
     transition: opacity 0.5s ease;
-    color: #ffffff;
+    color: var(--color-white);
 }
 
 .pop-text-col .lead-text {
     font-size: 1.8rem;
     font-family: 'Merriweather', serif;
-    color: #ffffff; 
+    color: var(--color-white); 
     margin-bottom: 0;
 }
 
@@ -764,7 +784,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
     overflow: hidden;
     padding: 16px;
     box-sizing: border-box;
-    background: #ffffff;
+    background: var(--color-white);
     border-right: none;
     z-index: 1;
 }
@@ -796,7 +816,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
 #contador-puntos { 
     font-weight: 800; 
     font-size: clamp(1.5rem, 3.5vw, 3rem); 
-    color: #023047; 
+    color: var(--color-blue-deep);
     background: rgba(255,255,255,0.9); 
     padding: 6px 10px; 
     border-radius: 6px; 
@@ -806,7 +826,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
 #percentage-display { 
     font-weight: 700; 
     font-size: clamp(1rem, 2.5vw, 2rem); 
-    color: #fb923c; 
+    color: var(--color-orange);
     background: rgba(255,255,255,0.9); 
     padding: 4px 8px; 
     border-radius: 6px; 
@@ -856,7 +876,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
 
 .narrativa h2 { 
     margin: 0 0 1rem 0; 
-    color: #023047; 
+    color: var(--color-blue-deep);
     font-weight: 700; 
     font-size: 2rem;
 }
@@ -874,7 +894,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
     width: 10px; 
     height: 10px; 
     border-radius: 50%; 
-    background: #023047; 
+    background: var(--color-blue-deep);
     opacity: 0; 
     transform: translate(-50%, -50%) scale(0.5); 
     will-change: transform, opacity; 
@@ -909,7 +929,7 @@ p { line-height: 1.6; font-size: 1.1rem; }
 }
 #chapter-3 .step.is-active .step-content { opacity: 1; transform: translateY(0); }
 #chapter-3 .sticky-caption-a2 {
-    border-left: 4px solid #C1121F;
+    border-left: 4px solid var(--color-red-main);
     padding-left: 16px; 
     display: block;
     height: fit-content;
@@ -976,7 +996,7 @@ div[data-step="18"] .final-text-layer {
     opacity: 0;
     transform: translateY(30px) scale(0.9);
     will-change: transform, opacity;
-    background: #fff;
+    background: var(--color-white);
     padding: 5px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
@@ -990,7 +1010,7 @@ div[data-step="18"] .final-text-layer {
     margin-top: 5px;
     font-size: 0.8rem; 
     font-weight: 700;
-    color: #333;
+    color: var(--color-text-main);
 }
 #step-expansion .step-content {
     opacity: 1 !important;
@@ -1057,7 +1077,7 @@ div[data-step="18"] .final-text-layer {
 /* --- ESTILOS STEP 19 --- */
 /* 1. Panel Principal Sticky */
 #resilience-panel {
-    background-color: #669BBC;
+    background-color: var(--color-blue-light);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1119,10 +1139,10 @@ div[data-step="18"] .final-text-layer {
 }
 
 /* Ajustes de Tipografía */
-.light-heading { color: #fff; font-size: 2.2rem; margin-bottom: 1.5rem; line-height: 1.2; }
+.light-heading { color: var(--color-white); font-size: 2.2rem; margin-bottom: 1.5rem; line-height: 1.2; }
 .light-text { color: rgba(255,255,255,0.95); font-size: 1.15rem; margin-bottom: 1.5rem; }
-.quote-box { border-left: 4px solid #C1121F; padding-left: 1.5rem; margin-top: 2rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 0 8px 8px 0; }
-.highlight-p { color: #fff; font-style: italic; font-weight: 500; font-size: 1.1rem; margin: 0; }
+.quote-box { border-left: 4px solid var(--color-red-main); padding-left: 1.5rem; margin-top: 2rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 0 8px 8px 0; }
+.highlight-p { color: var(--color-white); font-style: italic; font-weight: 500; font-size: 1.1rem; margin: 0; }
 
 /* Video Wrapper */
 .yt-video-wrapper {
@@ -1150,9 +1170,9 @@ div[data-step="18"] .final-text-layer {
 /* --- ESTILOS STEP 21 MAPA --- */
 .map-legend {
     position: fixed;
-    bottom: 30px; /* Si se solapa con el logo de Mapbox, auméntalo a 50px */
-    left: 20px;   /* CAMBIO: Ahora anclado a la izquierda */
-    right: auto;  /* Reset explícito para anular la regla anterior */
+    bottom: 30px;
+    left: 20px;
+    right: auto;
     
     background: rgba(255, 255, 255, 0.95);
     padding: 12px;
@@ -1161,19 +1181,26 @@ div[data-step="18"] .final-text-layer {
     
     font-family: 'Inter', sans-serif; 
     font-size: 11px; 
-    color: #333;
+    color: var(--color-text-main);
     z-index: 1050;
     width: 240px; 
     
-    border-left: 5px solid #023047; 
+    border-left: 5px solid var(--color-blue-deep);
     backdrop-filter: blur(4px);
     transition: opacity 0.5s ease;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+.map-legend[style*="opacity: 1"]{
+    pointer-events: auto;
 }
 .map-legend h4 {
     margin: 0 0 8px 0;
     font-size: 13px;
     font-weight: 700;
-    color: #023047;
+    color: var(--color-blue-deep);
     border-bottom: 1px solid #eee;
     padding-bottom: 4px;
 }
@@ -1202,12 +1229,12 @@ div[data-step="18"] .final-text-layer {
     border-radius: 6px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     font-family: 'Inter', sans-serif;
-    border-left: 4px solid #C1121F; /* Rojo para destacar el dato */
+    border-left: 4px solid var(--color-red-main);
 }
 .popup-header {
     font-size: 13px;
     font-weight: 700;
-    color: #333;
+    color: var(--color-text-main);
     margin-bottom: 4px;
     border-bottom: 1px solid #eee;
     padding-bottom: 4px;
@@ -1215,7 +1242,7 @@ div[data-step="18"] .final-text-layer {
 .popup-data {
     font-size: 18px; /* Número grande para impacto */
     font-weight: 800;
-    color: #C1121F;
+    color: var(--color-red-main);
 }
 .popup-label {
     font-size: 10px;
@@ -1251,7 +1278,7 @@ div[data-step="18"] .final-text-layer {
     padding: 1.5rem 1.8rem;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    border-left: 4px solid #023047;
+    border-left: 4px solid var(--color-blue-deep);
     backdrop-filter: blur(5px);
     
     /* Estado inicial: Invisible y desplazado */
@@ -1272,7 +1299,7 @@ div[data-step="18"] .final-text-layer {
     font-weight: 700;
     font-size: 1.05rem;
     margin-bottom: 0.8rem;
-    color: #023047;
+    color: var(--color-blue-deep);
     line-height: 1.3;
 }
 .story-card p {
@@ -1280,14 +1307,14 @@ div[data-step="18"] .final-text-layer {
     font-size: 0.95rem;
     line-height: 1.5;
     margin: 0;
-    color: #333;
+    color: var(--color-text-main);
     text-align: justify;
 }
 
 
 /* --- ESTILOS DEL STEP 22: CIERRE --- */
 #closing-layer {
-    background-color: #003049;
+    background-color: var(--color-blue-dark);
     position: fixed;
     top: 0;
     left: 0;
@@ -1300,23 +1327,16 @@ div[data-step="18"] .final-text-layer {
     will-change: opacity;
 }
 .scrolly-content {
-    padding-bottom: 0 !important;
+    padding-bottom: 0;
 }
 /* --- 2. EL CONTENEDOR DEL PASO 22 --- */
 div[data-step="22"] {
-    position: relative;
-    height: 100vh;
-    height: 100dvh;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 1rem !important;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-    z-index: 1000;
-    box-sizing: border-box;
+    margin-bottom: 0;
 }
 
 /* --- 3. EL CONTENIDO INTERNO --- */
@@ -1336,7 +1356,7 @@ div[data-step="22"] .final-content {
 
 /* TIPOGRAFÍA */
 div[data-step="22"] h2 {
-    color: #ffffff;
+    color: var(--color-white);
     font-size: clamp(1.8rem, 4vw, 3.5rem);
     line-height: 1.1;
     margin-bottom: 2rem;
@@ -1360,4 +1380,78 @@ div[data-step="22"] .quote {
     margin: 0;
     text-align: center;
     max-width: 600px;
+}
+
+/* --- ESTILOS DEL FOOTER --- */
+.site-footer {
+    background-color: var(--color-sand);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 1.5rem 1rem; 
+    position: relative;
+    z-index: 1001;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem; 
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center; 
+}
+
+.footer-container {
+    max-width: 800px; 
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; 
+}
+
+.footer-main-text {
+    font-weight: 600;
+    color: var(--color-text-main);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.copyright {
+    margin: 0;
+    opacity: 0.8;
+    font-weight: 300;
+    color: var(--color-text-main);
+}
+
+/* --- BOTÓN VOLVER AL INICIO --- */
+.back-to-top-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    background-color: var(--color-red-main);
+    color: var(--color-white);
+    border: 2px solid var(--color-white);
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    cursor: pointer;
+    z-index: 2147483647;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Estado inicial */
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    pointer-events: none;
+
+}
+
+.back-to-top-btn.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.back-to-top-btn:hover {
+    background-color: var(--color-white);
+    color: var(--color-red-main);
+    transform: translateY(-3px);
 }
