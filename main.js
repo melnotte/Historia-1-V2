@@ -785,7 +785,7 @@ function init() {
 init();
 
 // ======================================================
-// ZONA GSAP (Puntos + Step 18 + Step 21)
+// ZONA GSAP (Puntos + Step 18 + Step 20 + Step 21)
 // ======================================================
 
 if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
@@ -970,7 +970,61 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     }
 
     // ------------------------------------------------------
-    // C. LÓGICA STEP 21: PINTAR MAPA + SECUENCIA DE TEXTO
+    // C. LÓGICA STEP 20: FOREST LOSS (Horizontal/Vertical)
+    // ------------------------------------------------------
+    const stepForest = document.getElementById('step-forest-loss');
+
+    if (stepForest) {
+        
+        const tlForest = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#step-forest-loss",
+                start: "center center", // Cuando el centro del step llega al centro de la pantalla
+                end: "+=2000",          // Duración virtual del scroll (qué tanto debo scrollear para terminar)
+                pin: true,              // Fija la sección en pantalla
+                scrub: 1,               // Suaviza la animación (1 segundo de lag)
+                anticipatePin: 1
+            }
+        });
+
+        // SECUENCIA DE ANIMACIÓN:
+        
+        // 1. Aparece 2000 (desde abajo y transparente)
+        tlForest.to(".card-2000", {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power2.out"
+        })
+        
+        // Pequeña pausa de lectura visual
+        .to({}, { duration: 0.2 }) 
+
+        // 2. Aparece 2010
+        .to(".card-2010", {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power2.out"
+        })
+
+        // Pausa
+        .to({}, { duration: 0.2 })
+
+        // 3. Aparece 2020
+        .to(".card-2020", {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power2.out"
+        })
+
+        // 4. Pausa final para observar las tres juntas antes de desanclar
+        .to({}, { duration: 1 });
+    }
+
+    // ------------------------------------------------------
+    // D. LÓGICA STEP 21: PINTAR MAPA + SECUENCIA DE TEXTO
     // ------------------------------------------------------
     const stepMap = document.querySelector("#step-map-compare");
 

@@ -1199,6 +1199,127 @@ div[data-step="18"] .final-text-layer {
     .light-heading { font-size: 1.5rem; }
 }
 
+/* --- ESTILOS STEP 20: FOREST LOSS --- */
+#step-forest-loss {
+    position: relative;
+    width: 100%;
+    height: auto; 
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    overflow: hidden;
+}
+
+.forest-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* 1. Bloque de Texto */
+.forest-text-block {
+    text-align: justify;
+    max-width: 700px;
+    z-index: 10;
+}
+.forest-text-block h2 {
+    color: var(--color-text-main);
+    margin-bottom: 1.5rem;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+}
+.forest-text-block p {
+    color: #333;
+    font-size: 1.15rem;
+}
+
+/* 2. Galería */
+.forest-gallery {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.forest-card {
+    position: relative;
+    opacity: 0; 
+    transform: translateY(30px);
+    will-change: opacity, transform;
+}
+
+.img-wrapper {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    background: #000;
+    transition: transform 0.3s ease;
+}
+
+.img-wrapper img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.year-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(255,255,255,0.95);
+    color: #1a5223;
+    padding: 4px 10px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+/* --- RESPONSIVIDAD --- */
+
+/* MÓVIL (< 768px): Columna Vertical */
+@media (max-width: 767px) {
+    #step-forest-loss {
+        padding: 6rem 1rem;
+    }
+    .forest-gallery {
+        flex-direction: column;
+    }
+    .forest-card {
+        width: 100%;
+        max-width: 400px;
+    }
+    .img-wrapper {
+        aspect-ratio: 4/3;
+    }
+}
+
+/* TABLET Y ESCRITORIO (>= 768px): Fila Horizontal */
+@media (min-width: 768px) {
+    .forest-gallery {
+        flex-direction: row;
+        align-items: stretch; 
+    }
+    .forest-card {
+        flex: 1;
+        max-width: 350px;
+    }
+    .img-wrapper {
+        aspect-ratio: 1/1;
+    }
+    .forest-card:hover .img-wrapper {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(26, 82, 35, 0.25);
+    }
+}
+
 /* --- ESTILOS STEP 21 MAPA --- */
 .map-legend {
     position: fixed;
