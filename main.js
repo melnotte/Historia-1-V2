@@ -572,54 +572,51 @@ function handleStepProgress(response)
     if (step === '11') {
         const wrapper = element.querySelector('.zoom-wrapper');
         const box = element.querySelector('.sm-highlight-box');
-
-        // 1. Capturamos el nuevo elemento
         const caption = element.querySelector('.sm-caption-box');
 
         if (wrapper && box) {
             
-            const maxScale = 2; 
-            const panX = -320; 
-            const panY = 100; 
+            // --- 1. CONFIGURACIÓN DE ZOOM Y PANEO ---
+            const maxScale = 1.8; 
+            
+            // Ajustamos coordenadas (%)
+            // panX negativo mueve la imagen a la IZQUIERDA (para ver cosas a la derecha)
+            const panX = -25; 
+            // panY positivo baja la imagen (para ver cosas que están arriba)
+            const panY = 10;   
 
             let scale = 1;
             let currentPanX = 0;
             let currentPanY = 0;
+            let showOverlays = false;
 
             // FASE 0: VER LA IMAGEN (0% a 25%)
-            // Aquí no pasa nada, solo ves el plano completo.
             if (progress < 0.25) {
                 scale = 1;
                 currentPanX = 0;
                 currentPanY = 0;
                 showOverlays = false;
             }
-
             // FASE 1: HACIENDO ZOOM (25% a 60%)
-            // Calculamos la transición
             else if (progress >= 0.25 && progress < 0.6) {
-                // Normalizamos de 0 a 1 dentro de este tramo
                 const phaseProgress = (progress - 0.25) / 0.35; 
-                
                 scale = 1 + (phaseProgress * (maxScale - 1));
                 currentPanX = phaseProgress * panX;
                 currentPanY = phaseProgress * panY;
-                showOverlays = false; // Aún no mostramos texto
+                showOverlays = false; 
             }
-            
             // FASE 2: LECTURA / HOLD (60% en adelante)
-            // Ya llegamos al zoom máximo, mostramos el texto.
             else {
                 scale = maxScale;
                 currentPanX = panX;
                 currentPanY = panY;
-                showOverlays = true; // Aparece texto y cuadro
+                showOverlays = true; 
             }
 
-            // APLICAMOS LOS CAMBIOS
-            wrapper.style.transform = `translate3d(${currentPanX}px, ${currentPanY}px, 0) scale(${scale})`;
+            // APLICAMOS TRANSFORMACIÓN
+            wrapper.style.transform = `translate3d(${currentPanX}%, ${currentPanY}%, 0) scale(${scale})`;
             
-            // GESTIÓN DE CLASES (TEXTO Y CUADRO)
+            // GESTIÓN DE VISIBILIDAD (Overlay y Texto)
             if (showOverlays) {
                 box.classList.add('is-visible');
                 if (caption) caption.classList.add('is-visible');

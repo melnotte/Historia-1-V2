@@ -435,36 +435,44 @@ p { line-height: 1.6; font-size: 1.1rem; }
 
 /* --- STEP 11: SUPERMANZANAS ZOOM --- */
 
-/* 1. El contenedor que escalaremos con JS */
+/* 1. El contenedor que escalamos con JS */
 .zoom-wrapper {
     position: relative;
     width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    will-change: transform; /* Optimización para GPU */
+    max-width: 1200px;
+    height: auto;
+    display: block;
+    margin: auto;
+    will-change: transform;
     background-color: #f9efe6;
 }
 
 /* 2. La imagen */
 .zoom-image {
     width: 100%;
-    height: 100%;
-    object-fit: contain; /* Asegura que se vea todo el plano al inicio */
+    height: auto;
+    display: block;
+    object-fit: cover;
 }
 
-/* 3. El Recuadro Rojo */
+/* 3. Ajuste del Sticky Item padre para centrar el wrapper */
+.step[data-step="11"] .sticky-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #f9efe6;
+}
+
+/* 4. El Recuadro Rojo */
 .sm-highlight-box {
     position: absolute;
     z-index: 10;
     
     /* --- ZONA DE CALIBRACIÓN --- */
-    /* Juega con estos porcentajes en el inspector del navegador */
     top: 25%;   /* <--- Mueve hacia arriba/abajo */
-    left: 44%;  /* <--- Mueve hacia izquierda/derecha */
-    width: 32%; /* <--- Ancho del recuadro */
+    left: 40%;  /* <--- Mueve hacia izquierda/derecha */
+    width: 48%; /* <--- Ancho del recuadro */
     height: 40%;/* <--- Alto del recuadro */
     /* --------------------------- */
 
@@ -499,50 +507,70 @@ p { line-height: 1.6; font-size: 1.1rem; }
     font-size: 0.9rem;
     color: #333;
 }
+
 .sm-caption-box {
     position: absolute;
-    top: 15%;   /* Ajusta para bajarlo o subirlo */
-    right: 5%;  /* Margen derecho */
-    width: 90%;
-    max-width: 320px; /* Ancho máximo para que no sea muy largo */
+    z-index: 20;
     
-    background-color: rgba(193, 18, 31, 0.9); 
+    background-color: rgba(193, 18, 31, 0.95); 
     color: var(--color-white);
-    
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     
-    /* Tipografía */
     font-family: 'Inter', sans-serif;
     line-height: 1.5;
     font-size: 1rem;
     
-    /* Estado inicial: Oculto */
+    /* Animación de entrada */
     opacity: 0;
-    transform: translateY(20px); /* Un pequeño desplazamiento para efecto de entrada */
+    transform: translateY(20px);
     transition: all 0.6s ease;
-    pointer-events: none; /* Para que no bloquee el scroll si pasa el mouse */
-    z-index: 20;
+    pointer-events: auto; 
 }
-.sm-caption-box em {
-    display: block; /* Comportamiento de bloque para que acepte márgenes/bordes */
-    
-    /* --- LÍNEA --- */
-    border-top: 1px solid rgba(255, 255, 255, 0.5); 
-    padding-top: 1rem; /* Espacio entre la línea y el texto */
-    margin-top: 1rem;  /* Espacio entre el párrafo de arriba y la línea */
-    /* --------------------------- */
 
+.sm-caption-box em {
+    display: block; 
+    border-top: 1px solid rgba(255, 255, 255, 0.5); 
+    padding-top: 1rem; 
+    margin-top: 1rem;  
     font-family: 'Merriweather', serif;
     font-size: 0.95rem;
-    opacity: 1; /* Subimos un poco la opacidad para mejor lectura sobre rojo */
+    opacity: 1; 
     font-style: italic;
 }
+
 /* Clase para mostrar (Activada por JS) */
 .sm-caption-box.is-visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* MEDIA QUERY: ESCRITORIO */
+@media (min-width: 1024px) {
+    .sm-caption-box {
+        top: 15%;   
+        right: 5%;  
+        width: 30%;
+        max-width: 320px;
+    }
+}
+
+/* MEDIA QUERIES: TABLET Y MÓVIL */
+@media (max-width: 1023px) {
+    .sm-caption-box {
+        top: auto;
+        bottom: 5%;
+        left: 5%;
+        right: 5%;
+        width: 90%;
+        max-width: none;
+        padding: 1rem;
+        font-size: 0.95rem;
+    }    
+    .sm-highlight-box {
+        border-width: 2px;
+    }
 }
 
 /* --- STEP 13: GALERÍA POLAROID --- */
@@ -1220,7 +1248,7 @@ div[data-step="18"] .final-text-layer {
     margin-right: 8px;
     border-radius: 2px;
     flex-shrink: 0;
-    border: 1px solid rgba(0,0,0,0.1); /* Borde suave para colores muy claros */
+    border: 1px solid rgba(0,0,0,0.1);
 }
 /* --- ESTILOS DE TOOLTIP (Popup) --- */
 .mapboxgl-popup {
@@ -1244,7 +1272,7 @@ div[data-step="18"] .final-text-layer {
     padding-bottom: 4px;
 }
 .popup-data {
-    font-size: 18px; /* Número grande para impacto */
+    font-size: 18px;
     font-weight: 800;
     color: var(--color-red-main);
 }
@@ -1267,9 +1295,9 @@ div[data-step="18"] .final-text-layer {
     top: 12%;       /* Ajusta altura vertical */
     right: 5%;      /* Ajusta margen derecho */
     width: 90%;
-    max-width: 360px; /* Ancho cómodo para lectura */
+    max-width: 360px;
     z-index: 50;
-    pointer-events: none; /* Deja pasar clicks al mapa alrededor */
+    pointer-events: none;
 }
 /* Estilo base de cada tarjeta (todas apiladas en el mismo lugar) */
 .story-card {
