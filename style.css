@@ -30,6 +30,10 @@ body, html {
     /* IMPORTANTE: No usar overflow-x: hidden en body porque rompe sticky */
 }
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 h1, h2 { font-family: 'Merriweather', serif; }
 p { line-height: 1.6; font-size: 1.1rem; }
 
@@ -1031,7 +1035,7 @@ div[data-step="18"] .final-text-layer {
         flex-wrap: wrap; 
         gap: 8px; 
         width: 100%;
-        padding: 0 10px; 
+        padding: 0 10px;
         align-content: center; 
     }
     .exp-img {
@@ -1381,6 +1385,43 @@ div[data-step="22"] .quote {
     text-align: center;
     max-width: 600px;
 }
+
+/* =========================================
+   MEDIA QUERY: TABLET
+   ========================================= */
+
+@media (max-width: 1024px) {
+    
+    #chapter-3 {
+        padding-bottom: 0 !important;
+    }
+    div[data-step="22"] {
+        min-height: 90vh; 
+        padding-bottom: 3rem;
+        justify-content: center;
+    }
+    div[data-step="22"] h2 {
+        margin-bottom: 1.5rem;
+        font-size: clamp(1.5rem, 5vw, 2.5rem);
+    }
+}
+
+/* =========================================
+   MEDIA QUERY: MÓVIL
+   ========================================= */
+@media (max-width: 767px) {
+    
+    div[data-step="22"] {
+        min-height: 75vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-bottom: 0; 
+    }
+    div[data-step="22"] .final-content {
+        margin: auto 0;
+    }
+}   
 
 /* --- ESTILOS DEL FOOTER --- */
 .site-footer {

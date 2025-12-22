@@ -78,17 +78,17 @@ map.on('load', () => {
         }
     });
 
-    // 4. TOOLTIP MEJORADO (Interacción Hover)
+    // 4. TOOLTIP
     const popup = new mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false,
-        offset: 20 // Un poco más de espacio
+        offset: 20
     });
 
     // Usamos 'mousemove' para que el popup siga al cursor dentro del polígono
     map.on('mousemove', 'layer-cambio-poblacional', (e) => {
         
-        // A. Verificar visibilidad (Tu lógica original es excelente, la mantenemos)
+        // A. Verificar visibilidad
         const opacity = map.getPaintProperty('layer-cambio-poblacional', 'fill-opacity');
         if (opacity < 0.1 || !e.features.length) return;
 
@@ -210,9 +210,8 @@ function handleStepEnter(response) {
             break;
 
         case '6':
-            // Step 6: TEXTO 1968-1971 (Volvemos a ver el mapa de fondo)
+            // Step 6: TEXTO 1968-1971
             switchGlobalLayer('map');
-            // Opcional: Un pequeño ajuste de cámara para dar dinamismo
             map.flyTo({ center: [-86.80, 21.15], zoom: 11, pitch: 0, speed: 0.5 });
             break;
 
@@ -731,7 +730,7 @@ function handleStepProgress(response)
         const legend = document.getElementById('legend-step-21');
         
         if (closingLayer) {
-            let opacityVal = normalize(progress, 0, 0.5); 
+            let opacityVal = normalize(progress, 0, 0.3); 
             
             if (opacityVal > 1) opacityVal = 1;
             closingLayer.style.opacity = opacityVal;
