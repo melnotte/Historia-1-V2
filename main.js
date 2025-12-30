@@ -6,6 +6,9 @@ let sandVideoTarget = 0;   // Objetivo del scroll
 let sandVideoCurrent = 0;  // Posición actual suavizada
 let isStep9Active = false; // Interruptor del motor
 
+const isTouchDevice = window.innerWidth < 1025 || 
+                      (window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches);
+
 // 1. Inicializar Mapa
 const map = new mapboxgl.Map({
     container: 'map',
@@ -15,8 +18,8 @@ const map = new mapboxgl.Map({
     interactive: true,
     cooperativeGestures: false,
     scrollZoom: false,
-    touchZoomRotate: true,  //(permite zoom/rotar con 2 dedos)
-    dragPan: true,          
+    dragPan: !isTouchDevice,
+    touchZoomRotate: isTouchDevice,
     doubleClickZoom: true,  
     dragRotate: false
 });
