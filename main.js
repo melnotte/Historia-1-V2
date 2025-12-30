@@ -13,7 +13,7 @@ const map = new mapboxgl.Map({
     center: [-86.85, 21.16], 
     zoom: 10,
     interactive: true,
-    cooperativeGestures: true,
+    cooperativeGestures: false,
     scrollZoom: true,
     touchZoomRotate: true,  //(permite zoom/rotar con 2 dedos)
     dragPan: true,          
