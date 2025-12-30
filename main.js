@@ -12,13 +12,13 @@ const map = new mapboxgl.Map({
     style: 'mapbox://styles/mapbox/light-v11', 
     center: [-86.85, 21.16], 
     zoom: 10,
-    
-    interactive: true,      // 1. Habilitamos la interactividad general
-    scrollZoom: false,      // 2. BLOQUEAMOS el zoom con scroll
-    dragPan: true,          // 3. Permitimos mover el mapa (Clic sostenido + arrastrar)
-    doubleClickZoom: true,  // 4. Doble clic = Zoom In (Estándar de mapas)
-    touchZoomRotate: false, // 5. Opcional: Evita rotaciones accidentales en móvil
-    dragRotate: false       // 6. Opcional: Mantiene el mapa orientado al Norte siempre
+    interactive: true,
+    cooperativeGestures: true,
+    scrollZoom: true,
+    touchZoomRotate: true,  //(permite zoom/rotar con 2 dedos)
+    dragPan: true,          
+    doubleClickZoom: true,  
+    dragRotate: false
 });
 
 map.addControl(new mapboxgl.NavigationControl({
